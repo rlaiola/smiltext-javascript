@@ -1,7 +1,0 @@
-<smilText id="text1" dur="5s" textWrapOption="wrap">
-	Hallo!
-	<clear begin="3s"/>
-	Hoe gaat het?
-	<tev next="2s"/>
-	Doei!
-</smilText>

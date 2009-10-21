@@ -1,7 +1,0 @@
-<smilText dur="3s">
-	Hello<br/>world!
-	<tev next="2s"/>
-	How are you today?
-	<clear begin="4s"/>
-	I gotta go now!
-</smilText>
