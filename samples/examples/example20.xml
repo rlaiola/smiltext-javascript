@@ -1,0 +1,15 @@
+<smilText textMode="crawl" textBackgroundColor="yellow">
+	smilText can crawl text! Check it out!!!
+	<div>
+	Hi
+	<p textBackgroundColor="green">
+	Hello
+	<br/>
+	<span textBackgroundColor="cyan">
+	World!
+	</span>
+	</p>
+	</div>
+	<tev next="3s"/>
+	Doei!
+</smilText>
