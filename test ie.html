@@ -1,0 +1,472 @@
+<!--
+/**
+ * This file is part of the smilText parser implemented in JavaScript,
+ *
+ * Copyright (C) 2003-2009 Stichting CWI, 
+ * Science Park 123, 1098 XG Amsterdam, The Netherlands.
+ *
+ * smilText parser in JavaScript is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * smilText parser in JavaScript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with smilText parser in JavaScript; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+/**
+ @version 1.0
+ @author <a href="mailto:rlaiola@cwi.nl">Rodrigo Laiola Guimaraes</a>
+*/
+-->
+
+<HTML>
+<HEAD>
+<script type="text/javascript" src="../src/scripts/jsoner.commons.js"></script>
+<script type="text/javascript" src="../src/scripts/com.iskitz.ajile.1.2.1.js"></script>
+<script type="text/javascript" src="../src/scripts/cwi.adt.js"></script>
+<script type="text/javascript" src="../src/scripts/cwi.util.js"></script>
+<script type="text/javascript" src="../src/scripts/cwi.smilText.Time.js"></script>
+<script type="text/javascript" src="../src/scripts/cwi.smilText.js"></script>
+</HEAD>
+<BODY>
+
+<table>
+<tr>
+<td valign="top" width="33%">
+
+<H2>smilText Examples: BasicText Module</H2>
+
+<H4 style='color:red'>Note: IE cannot read smilText tags inside the html file</H4>
+
+<!-- import smilText data onload event -->
+<H3>Example 1: Hello World!</H3>
+<DIV id="region1">
+<SCRIPT>
+var doc1 = cwi.smilText.Parser.parseFile('examples/example1.xml', 'region1');
+doc1.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc1.play()">Play</A>
+<A HREF="javascript:doc1.pause()">Pause</A>
+<A HREF="javascript:doc1.stop()">Stop</A>
+<br/>
+<A HREF="examples/example1.xml">view smilText code</A>
+
+<!-- import smilText data onload event -->
+<H3>Example 2: Example 1 with duration = 10s</H3>
+<DIV id="region2">
+<SCRIPT>
+var doc2 = cwi.smilText.Parser.parseFile('examples/example2.xml', 'region2');
+doc2.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc2.play()">Play</A>
+<A HREF="javascript:doc2.pause()">Pause</A>
+<A HREF="javascript:doc2.stop()">Stop</A>
+<br/>
+<A HREF="examples/example2.xml">view smilText code</A>
+
+<!-- import smilText data onload event -->
+<H3>Example 3: Example 2 with a line break</H3>
+<DIV id="region3">
+<SCRIPT>
+var doc3 = cwi.smilText.Parser.parseFile('examples/example3.xml', 'region3');
+doc3.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc3.play()">Play</A>
+<A HREF="javascript:doc3.pause()">Pause</A>
+<A HREF="javascript:doc3.stop()">Stop</A>
+<br/>
+<A HREF="examples/example3.xml">view smilText code</A>
+
+<!-- import smilText data onload event -->
+<H3>Example 4: Example 3 with TEV and CLEAR tags</H3>
+<DIV id="region4">
+<SCRIPT>
+var doc4 = cwi.smilText.Parser.parseFile('examples/example4.xml', 'region4');
+doc4.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc4.play()">Play</A>
+<A HREF="javascript:doc4.pause()">Pause</A>
+<A HREF="javascript:doc4.stop()">Stop</A>
+<br/>
+<A HREF="examples/example4.xml">view smilText code</A>
+
+<!-- import smilText data onload event -->
+<H3>Example 5: Example 4 without explicit duration</H3>
+<DIV id="region5">
+<SCRIPT>
+var doc5 = cwi.smilText.Parser.parseFile('examples/example5.xml', 'region5');
+doc5.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc5.play()">Play</A>
+<A HREF="javascript:doc5.pause()">Pause</A>
+<A HREF="javascript:doc5.stop()">Stop</A>
+<br/>
+<A HREF="examples/example5.xml">view smilText code</A>
+
+<!-- import smilText data onload event -->
+<H3>Example 6: Example 5 with explicit duration = 3s</H3>
+<DIV id="region6">
+<SCRIPT>
+var doc6 = cwi.smilText.Parser.parseFile('examples/example6.xml', 'region6');
+doc6.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc6.play()">Play</A>
+<A HREF="javascript:doc6.pause()">Pause</A>
+<A HREF="javascript:doc6.stop()">Stop</A>
+<br/>
+<A HREF="examples/example6.xml">view smilText code</A>
+
+<!-- smilText tag inside the html file -->
+<H3>Example 7: smilText tag inside the html file</H3>
+<DIV id="region7">
+<SCRIPT>
+var doc7 = cwi.smilText.Parser.parseFile('examples/example7.xml', 'region7');
+doc7.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc7.play()">Play</A>
+<A HREF="javascript:doc7.pause()">Pause</A>
+<A HREF="javascript:doc7.stop()">Stop</A>
+<br/>
+<A HREF="examples/example7.xml">view smilText code</A>
+
+<!-- smilText tag inside the html file -->
+<H3>Example 8: Example 7 with textWrapOption = wrap</H3>
+<DIV id="region8" STYLE="background-color:yellow;width:50;height:50">
+<SCRIPT>
+var doc8 = cwi.smilText.Parser.parseFile('examples/example8.xml', 'region8');
+doc8.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc8.play()">Play</A>
+<A HREF="javascript:doc8.pause()">Pause</A>
+<A HREF="javascript:doc8.stop()">Stop</A>
+<br/>
+<A HREF="examples/example8.xml">view smilText code</A>
+
+</td>
+
+<td valign="top" width="33%">
+
+<H2>smilText Examples: TextStyling Module</H2>
+
+<!-- import smilText data onload event -->
+<H3>Example 9: Hello World in DIV, P and SPAN elements</H3>
+<DIV id="region9">
+<SCRIPT>
+var doc9 = cwi.smilText.Parser.parseFile('examples/example9.xml', 'region9');
+doc9.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc9.play()">Play</A>
+<A HREF="javascript:doc9.pause()">Pause</A>
+<A HREF="javascript:doc9.stop()">Stop</A>
+<br/>
+<A HREF="examples/example9.xml">view smilText code</A>
+
+<!-- import smilText data onload event -->
+<H3>Example 10: Example 9 with textBackgroundColor attribute</H3>
+<DIV id="region10">
+<SCRIPT>
+var doc10 = cwi.smilText.Parser.parseFile('examples/example10.xml', 'region10');
+doc10.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc10.play()">Play</A>
+<A HREF="javascript:doc10.pause()">Pause</A>
+<A HREF="javascript:doc10.stop()">Stop</A>
+<br/>
+<A HREF="examples/example10.xml">view smilText code</A>
+
+<!-- import smilText data onload event -->
+<H3>Example 11: Example 9 with textColor attribute</H3>
+<DIV id="region11">
+<SCRIPT>
+var doc11 = cwi.smilText.Parser.parseFile('examples/example11.xml', 'region11');
+doc11.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc11.play()">Play</A>
+<A HREF="javascript:doc11.pause()">Pause</A>
+<A HREF="javascript:doc11.stop()">Stop</A>
+<br/>
+<A HREF="examples/example11.xml">view smilText code</A>
+
+<!-- import smilText data onload event -->
+<H3>Example 12: Example 9 with textStyle and textWeight attributes</H3>
+<DIV id="region12">
+<SCRIPT>
+var doc12 = cwi.smilText.Parser.parseFile('examples/example12.xml', 'region12');
+doc12.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc12.play()">Play</A>
+<A HREF="javascript:doc12.pause()">Pause</A>
+<A HREF="javascript:doc12.stop()">Stop</A>
+<br/>
+<A HREF="examples/example12.xml">view smilText code</A>
+
+<!-- import smilText data onload event -->
+<H3>Example 13: Example 9 with textFontSize and textFontFamily attributes</H3>
+<DIV id="region13">
+<SCRIPT>
+var doc13 = cwi.smilText.Parser.parseFile('examples/example13.xml', 'region13');
+doc13.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc13.play()">Play</A>
+<A HREF="javascript:doc13.pause()">Pause</A>
+<A HREF="javascript:doc13.stop()">Stop</A>
+<br/>
+<A HREF="examples/example13.xml">view smilText code</A>
+
+<!-- import smilText data onload event -->
+<H3>Example 14: Example 9 with textWritingMode and textAlign attributes</H3>
+<H4 style='color:red'>Note: textWritingMode will be available in CSS3. So far only IE supports 'tb-rl' and 'lr-tb'</H4>
+<DIV id="region14">
+<SCRIPT>
+var doc14 = cwi.smilText.Parser.parseFile('examples/example14.xml', 'region14');
+doc14.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc14.play()">Play</A>
+<A HREF="javascript:doc14.pause()">Pause</A>
+<A HREF="javascript:doc14.stop()">Stop</A>
+<br/>
+<A HREF="examples/example14.xml">view smilText code</A>
+
+<!-- import smilText data onload event -->
+<H3>Example 15: textDirection attribute</H3>
+<DIV id="region15">
+<SCRIPT>
+var doc15 = cwi.smilText.Parser.parseFile('examples/example15.xml', 'region15');
+doc15.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc15.play()">Play</A>
+<A HREF="javascript:doc15.pause()">Pause</A>
+<A HREF="javascript:doc15.stop()">Stop</A>
+<br/>
+<A HREF="examples/example15.xml">view smilText code</A>
+
+<!-- import smilText data onload event -->
+<H3>Example 16: textMode = replace</H3>
+<DIV id="region16">
+<SCRIPT>
+var doc16 = cwi.smilText.Parser.parseFile('examples/example16.xml', 'region16');
+doc16.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc16.play()">Play</A>
+<A HREF="javascript:doc16.pause()">Pause</A>
+<A HREF="javascript:doc16.stop()">Stop</A>
+<br/>
+<A HREF="examples/example16.xml">view smilText code</A>
+
+<!-- import smilText data onload event -->
+<H3>Example 17: textPlace attribute</H3>
+<H4 style='color:red'>Note: I still do not know how to do it.</H4>
+
+<!-- import smilText data onload event -->
+<H3>Example 18: textStyle and textStyling elements (+ some timing to make it fun).</H3>
+<DIV id="region18">
+<SCRIPT>
+var doc18 = cwi.smilText.Parser.parseFile('examples/example18.xml', 'region18');
+doc18.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc18.play()">Play</A>
+<A HREF="javascript:doc18.pause()">Pause</A>
+<A HREF="javascript:doc18.stop()">Stop</A>
+<br/>
+<A HREF="examples/example18.xml">view smilText code</A>
+
+<!-- smilText data inside html -->
+<H3>Example 19: Testing xml:space. smilText code inside html.</H3>
+<H4 style='color:red'>Note: IE doesn't keep whitespaces correctly (Problem reported in some foruns). Finally, for xml:space=preserve and textWrapOption=wrap I've used a CSS style property called whiteSpace='pre-wrap' and it is not supported by IE.</H4>
+
+<DIV id="region191">
+<SCRIPT>
+var doc19_1 = cwi.smilText.Parser.parseFile('examples/example19-1.xml', 'region191');
+doc19_1.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc19_1.play()">Play</A>
+<A HREF="javascript:doc19_1.pause()">Pause</A>
+<A HREF="javascript:doc19_1.stop()">Stop</A>
+<br/>
+<A HREF="examples/example19-1.xml">view smilText code</A>
+
+<br/><br/>
+
+<DIV id="region192">
+<SCRIPT>
+var doc19_2 = cwi.smilText.Parser.parseFile('examples/example19-2.xml', 'region192');
+doc19_2.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc19_2.play()">Play</A>
+<A HREF="javascript:doc19_2.pause()">Pause</A>
+<A HREF="javascript:doc19_2.stop()">Stop</A>
+<br/>
+<A HREF="examples/example19-2.xml">view smilText code</A>
+
+</td>
+
+<td valign="top" width="33%">
+
+<H2>smilText Examples: TextMotion Module</H2>
+
+<!-- smilText tag inside the html file -->
+<H3>Example 20: textMode = crawl</H3>
+<DIV id="region20" style="background-color:red;width:500">
+<SCRIPT>
+var doc20 = cwi.smilText.Parser.parseFile('examples/example20.xml', 'region20');
+doc20.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc20.play()">Play</A>
+<A HREF="javascript:doc20.pause()">Pause</A>
+<A HREF="javascript:doc20.stop()">Stop</A>
+<br/>
+<A HREF="examples/example20.xml">view smilText code</A>
+
+<!-- smilText tag inside the html file -->
+<H3>Example 21: textMode = scroll</H3>
+<DIV id="region21" style="background-color:red;width:500">
+<SCRIPT>
+var doc21 = cwi.smilText.Parser.parseFile('examples/example21.xml', 'region21');
+doc21.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc21.play()">Play</A>
+<A HREF="javascript:doc21.pause()">Pause</A>
+<A HREF="javascript:doc21.stop()">Stop</A>
+<br/>
+<A HREF="examples/example21.xml">view smilText code</A>
+
+<!-- smilText tag inside the html file -->
+<H3>Example 22: textMode = jump</H3>
+<H4 style='color:red'>Note: TODO</H4>
+<DIV id="region22" style="background-color:red;width:500;height:100">
+<SCRIPT>
+var doc22 = cwi.smilText.Parser.parseFile('examples/example22.xml', 'region22');
+doc22.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc22.play()">Play</A>
+<A HREF="javascript:doc22.pause()">Pause</A>
+<A HREF="javascript:doc22.stop()">Stop</A>
+<br/>
+<A HREF="examples/example22.xml">view smilText code</A>
+
+<!-- smilText tag inside the html file -->
+<H3>Example 23: textRate attribute</H3>
+
+<H4 style='color:red'>Note: IE seems to present a problem while using different textRates. I did not find out the reason yet.</H4>
+
+<H4>Crawl mode</H4>
+<DIV id="region230" style="background-color:red;width:200">
+<SCRIPT>
+var doc23_0 = cwi.smilText.Parser.parseFile('examples/example23-0.xml', 'region230');
+doc23_0.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc23_0.play()">Play</A>
+<A HREF="javascript:doc23_0.pause()">Pause</A>
+<A HREF="javascript:doc23_0.stop()">Stop</A>
+<br/>
+<A HREF="examples/example23-0.xml">view smilText code</A>
+
+<DIV id="region23" style="background-color:red;width:200">
+<SCRIPT>
+var doc23_1 = cwi.smilText.Parser.parseFile('examples/example23-1.xml', 'region23');
+doc23_1.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc23_1.play()">Play</A>
+<A HREF="javascript:doc23_1.pause()">Pause</A>
+<A HREF="javascript:doc23_1.stop()">Stop</A>
+<br/>
+<A HREF="examples/example23-1.xml">view smilText code</A>
+
+<DIV id="region231" style="background-color:red;width:200">
+<SCRIPT>
+var doc23_2 = cwi.smilText.Parser.parseFile('examples/example23-2.xml', 'region231');
+doc23_2.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc23_2.play()">Play</A>
+<A HREF="javascript:doc23_2.pause()">Pause</A>
+<A HREF="javascript:doc23_2.stop()">Stop</A>
+<br/>
+<A HREF="examples/example23-2.xml">view smilText code</A>
+
+<H4>Scroll mode</H4>
+<DIV id="region232" style="background-color:red;width:200">
+<SCRIPT>
+var doc23_3 = cwi.smilText.Parser.parseFile('examples/example23-3.xml', 'region232');
+doc23_3.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc23_3.play()">Play</A>
+<A HREF="javascript:doc23_3.pause()">Pause</A>
+<A HREF="javascript:doc23_3.stop()">Stop</A>
+<br/>
+<A HREF="examples/example23-3.xml">view smilText code</A>
+
+<DIV id="region233" style="background-color:red;width:200">
+<SCRIPT>
+var doc23_4 = cwi.smilText.Parser.parseFile('examples/example23-4.xml', 'region233');
+doc23_4.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc23_4.play()">Play</A>
+<A HREF="javascript:doc23_4.pause()">Pause</A>
+<A HREF="javascript:doc23_4.stop()">Stop</A>
+<br/>
+<A HREF="examples/example23-4.xml">view smilText code</A>
+
+<DIV id="region234" style="background-color:red;width:200">
+<SCRIPT>
+var doc23_5 = cwi.smilText.Parser.parseFile('examples/example23-5.xml', 'region234');
+doc23_5.play();
+</SCRIPT>
+</DIV>
+<A HREF="javascript:doc23_5.play()">Play</A>
+<A HREF="javascript:doc23_5.pause()">Pause</A>
+<A HREF="javascript:doc23_5.stop()">Stop</A>
+<br/>
+<A HREF="examples/example23-5.xml">view smilText code</A>
+
+<H4>Jump mode</H4>
+<H4 style='color:red'>Note: TODO</H4>
+<DIV id="region235" style="background-color:red;width:500;height:20">
+</DIV>
+
+<!-- smilText tag inside the html file -->
+<H3>Example 24: textConceal attribute</H3>
+<H4 style='color:red'>Note: TODO</H4>
+<DIV id="region24" style="background-color:red;width:500;height:20">
+</DIV>
+
+</td>
+
+</tr>
+</table>
+
+</BODY>
+</HTML>
