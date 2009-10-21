@@ -1,0 +1,22 @@
+<smil xmlns="http://www.w3.org/ns/smil" version="3.0" baseProfile="smilText">
+<head>
+	<textStyling>
+		<textStyle id='mystyle' textAlign='center' textBackgroundColor='black' textColor='white' textDirection='rtl' textFontFamily='Arial' textFontSize='28' textFontStyle='italic' textFontWeight='bold' textMode='replace' textPlace='center' textWritingMode='lr-tb'/>
+		<textStyle id='mystyle2' textBackgroundColor='red'/>
+	</textStyling>
+</head>
+<body>
+	<smilText textStyle='mystyle'>
+		Hello world 1!
+		<div textAlign='right' textFontStyle='normal' textFontWeight='normal' textBackgroundColor='green'>
+			Hello world 1.1!
+			<tev begin='2s'/>
+			Hello world 2!
+		</div>
+		<p textColor='gray' textFontFamily='monospace' textFontSize='14' textBackgroundColor='blue'>Hello world 3!</p>
+		<tev next='2'/>
+		<p textStyle='mystyle2'>I gotta go</p>
+		Bye!
+	</smilText>
+</body>
+</smil>
