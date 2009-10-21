@@ -1,0 +1,19 @@
+<smilText>
+	Hello world 1!
+	<div textFontWeight='bold' textFontStyle='italic'>
+		Hello world 2!
+		<p textFontStyle='oblique'>Hello world 5!</p>
+		Hello world 3!
+		<div textFontStyle='normal'>
+			<p>Hello world 7!</p>
+			Hello world 4!
+		</div>
+		<p textFontStyle='italic'>Hello world 6!</p>
+		<div textFontWeight='normal' textFontStyle='reverseOblique'>
+			Hello world 10!
+			<span textFontStyle='normal'>Hello world 8!</span>
+			Hello world 9!
+		</div>
+	</div>
+	Hello world 11!
+</smilText>

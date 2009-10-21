@@ -1,0 +1,19 @@
+<smilText>
+	Hello world 1!
+	<div textBackgroundColor='green'>
+		Hello world 2!
+		<p textBackgroundColor='red'>Hello world 5!</p>
+		Hello world 3!
+		<div textBackgroundColor='blue'>
+			<p>Hello world 7!</p>
+			Hello world 4!
+		</div>
+		<p textBackgroundColor='yellow'>Hello world 6!</p>
+		<div textBackgroundColor='gray'>
+			Hello world 10!
+			<span textBackgroundColor='pink'>Hello world 8!</span>
+			Hello world 9!
+		</div>
+	</div>
+	Hello world 11!
+</smilText>
