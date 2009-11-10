@@ -1,0 +1,69 @@
+<!--
+/**
+ * This file is part of the smilText parser implemented in JavaScript,
+ *
+ * Copyright (C) 2003-2009 Stichting CWI, 
+ * Science Park 123, 1098 XG Amsterdam, The Netherlands.
+ *
+ * smilText parser in JavaScript is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * smilText parser in JavaScript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with smilText parser in JavaScript; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+/**
+ @version 1.0
+ @author <a href="mailto:rlaiola@cwi.nl">Rodrigo Laiola Guimaraes</a>
+*/
+-->
+
+<HTML>
+<HEAD>
+<script type="text/javascript" src="../src/scripts/jsoner.commons.js"></script>
+<script type="text/javascript" src="../src/scripts/com.iskitz.ajile.1.2.1.js"></script>
+<script type="text/javascript" src="../src/scripts/cwi.adt.js"></script>
+<script type="text/javascript" src="../src/scripts/cwi.util.js"></script>
+<script type="text/javascript" src="../src/scripts/cwi.smilText.Time.js"></script>
+<script type="text/javascript" src="../src/scripts/cwi.smilText.js"></script>
+</HEAD>
+<BODY>
+
+<H3>Example 1: integration with JS ambulant</H3>
+
+<div id="region1"></div>
+
+<smil:smilText id="mydoc" textColor="red" textFontSize="20" style="display: none">
+Hi
+<smil:tev begin="5s"></smil:tev>
+Hoei
+</smil:smilText>
+
+<script>
+
+function callback() {
+	alert("End");
+}
+
+var elem = document.getElementById("mydoc");
+var doc1 = cwi.smilText.Parser.parseHTMLElement(elem, "region1");
+doc1.addEventListener(cwi.smilText.Time.EVENT_END, callback);
+doc1.play();
+
+</script>
+
+<A HREF="javascript:doc1.play()">Play</A>
+<A HREF="javascript:doc1.pause()">Pause</A>
+<A HREF="javascript:doc1.stop()">Stop</A>
+<br/>
+
+</BODY>
+</HTML>

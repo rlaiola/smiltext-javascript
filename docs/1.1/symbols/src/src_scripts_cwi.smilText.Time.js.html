@@ -1,0 +1,406 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/**
+<span class='line'>  2</span>  * This file is part of the smilText parser implemented in JavaScript,
+<span class='line'>  3</span>  *
+<span class='line'>  4</span>  * Copyright (C) 2003-2009 Stichting CWI, 
+<span class='line'>  5</span>  * Science Park 123, 1098 XG Amsterdam, The Netherlands.
+<span class='line'>  6</span>  *
+<span class='line'>  7</span>  * smilText parser in JavaScript is free software; you can redistribute it and/or modify
+<span class='line'>  8</span>  * it under the terms of the GNU Lesser General Public License as published by
+<span class='line'>  9</span>  * the Free Software Foundation; either version 2.1 of the License, or
+<span class='line'> 10</span>  * (at your option) any later version.
+<span class='line'> 11</span>  *
+<span class='line'> 12</span>  * smilText parser in JavaScript is distributed in the hope that it will be useful,
+<span class='line'> 13</span>  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class='line'> 14</span>  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+<span class='line'> 15</span>  * GNU Lesser General Public License for more details.
+<span class='line'> 16</span>  *
+<span class='line'> 17</span>  * You should have received a copy of the GNU Lesser General Public License
+<span class='line'> 18</span>  * along with smilText parser in JavaScript; if not, write to the Free Software
+<span class='line'> 19</span>  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+<span class='line'> 20</span>  */</span><span class="WHIT">
+<span class='line'> 21</span> 
+<span class='line'> 22</span> </span><span class="COMM">/**
+<span class='line'> 23</span>  @name cwi.smilText.Time
+<span class='line'> 24</span>  @namespace Hold classes and methods related to the smilText time engine.
+<span class='line'> 25</span>  @version 1.0
+<span class='line'> 26</span>  @author &lt;a href="mailto:rlaiola@cwi.nl">Rodrigo Laiola Guimaraes&lt;/a>
+<span class='line'> 27</span> */</span><span class="WHIT">
+<span class='line'> 28</span> </span><span class="NAME">Namespace</span><span class="PUNC">(</span><span class="STRN">"cwi.smilText.Time"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 29</span> 
+<span class='line'> 30</span> 
+<span class='line'> 31</span> 
+<span class='line'> 32</span> 
+<span class='line'> 33</span> 
+<span class='line'> 34</span> </span><span class="COMM">/* Solve library dependencies */</span><span class="WHIT">
+<span class='line'> 35</span> </span><span class="NAME">Import</span><span class="PUNC">(</span><span class="STRN">"cwi.adt.Hashtable"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 36</span> </span><span class="NAME">Import</span><span class="PUNC">(</span><span class="STRN">"cwi.adt.DoubleLinkedList"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 37</span> 
+<span class='line'> 38</span> </span><span class="COMM">/**
+<span class='line'> 39</span>  * Stand for the play event of a Playable object.
+<span class='line'> 40</span>  */</span><span class="WHIT">
+<span class='line'> 41</span> </span><span class="NAME">cwi.smilText.Time.EVENT_PLAY</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 42</span> 
+<span class='line'> 43</span> </span><span class="COMM">/**
+<span class='line'> 44</span>  * Stand for the pause event of a Playable object.
+<span class='line'> 45</span>  */</span><span class="WHIT">
+<span class='line'> 46</span> </span><span class="NAME">cwi.smilText.Time.EVENT_PAUSE</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">2</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 47</span> 
+<span class='line'> 48</span> </span><span class="COMM">/**
+<span class='line'> 49</span>  * Stand for the stop event of a Playable object.
+<span class='line'> 50</span>  */</span><span class="WHIT">
+<span class='line'> 51</span> </span><span class="NAME">cwi.smilText.Time.EVENT_STOP</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 52</span> 
+<span class='line'> 53</span> </span><span class="COMM">/**
+<span class='line'> 54</span>  * Stand for the natural end event of a Playable object.
+<span class='line'> 55</span>  */</span><span class="WHIT">
+<span class='line'> 56</span> </span><span class="NAME">cwi.smilText.Time.EVENT_END</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="NUMB">1</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 57</span> 
+<span class='line'> 58</span> </span><span class="COMM">/**
+<span class='line'> 59</span>  * Define the Playable interface.
+<span class='line'> 60</span>  * @constructor
+<span class='line'> 61</span>  * @author &lt;a href="mailto:rlaiola@cwi.nl">Rodrigo Laiola Guimaraes&lt;/a>
+<span class='line'> 62</span>  */</span><span class="WHIT">
+<span class='line'> 63</span> </span><span class="NAME">cwi.smilText.Time.Playable</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 64</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="WHIT">	</span><span class="NAME">JSINER.extend</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 66</span> </span><span class="WHIT">		
+<span class='line'> 67</span> 	</span><span class="COMM">/**
+<span class='line'> 68</span> 	* Variables
+<span class='line'> 69</span> 	* @private
+<span class='line'> 70</span> 	*/</span><span class="WHIT">
+<span class='line'> 71</span> </span><span class="WHIT">	</span><span class="NAME">this.timeNow</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="NUMB">1</span><span class="PUNC">;</span><span class="WHIT">							</span><span class="COMM">// Keep the current time.</span><span class="WHIT">
+<span class='line'> 72</span> </span><span class="WHIT">	</span><span class="NAME">this.state</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">								</span><span class="COMM">// state: 0 (stopped); 1 (playing); 2 (paused)</span><span class="WHIT">
+<span class='line'> 73</span> </span><span class="WHIT">	</span><span class="NAME">this.externalClock</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">					</span><span class="COMM">// True whether the time is controlled by an external source. </span><span class="WHIT">
+<span class='line'> 74</span> </span><span class="WHIT">												</span><span class="COMM">// False, otherwise.</span><span class="WHIT">
+<span class='line'> 75</span> </span><span class="WHIT">	</span><span class="NAME">this.eventListeners</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Hashtable</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">		</span><span class="COMM">// Keep event listeners</span><span class="WHIT">
+<span class='line'> 76</span> </span><span class="WHIT">	
+<span class='line'> 77</span> 	</span><span class="COMM">// Creates a list for each type of event.</span><span class="WHIT">
+<span class='line'> 78</span> </span><span class="WHIT">	</span><span class="NAME">this.eventListeners.put</span><span class="PUNC">(</span><span class="NAME">cwi.smilText.Time.EVENT_STOP</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">DoubleLinkedList</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 79</span> </span><span class="WHIT">	</span><span class="NAME">this.eventListeners.put</span><span class="PUNC">(</span><span class="NAME">cwi.smilText.Time.EVENT_PLAY</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">DoubleLinkedList</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 80</span> </span><span class="WHIT">	</span><span class="NAME">this.eventListeners.put</span><span class="PUNC">(</span><span class="NAME">cwi.smilText.Time.EVENT_PAUSE</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">DoubleLinkedList</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 81</span> </span><span class="WHIT">	</span><span class="NAME">this.eventListeners.put</span><span class="PUNC">(</span><span class="NAME">cwi.smilText.Time.EVENT_END</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">DoubleLinkedList</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 82</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 83</span> 
+<span class='line'> 84</span> </span><span class="COMM">/**
+<span class='line'> 85</span> * Add a callback function as a listener of an event. Listeners are notified in the event transition.
+<span class='line'> 86</span> * @param {integer} eventType The Playable event type.
+<span class='line'> 87</span> * @param {function} callback THe callback function.
+<span class='line'> 88</span> * @see cwi.smilText.Time.EVENT_PLAY
+<span class='line'> 89</span> * @see cwi.smilText.Time.EVENT_PAUSE
+<span class='line'> 90</span> * @see cwi.smilText.Time.EVENT_STOP
+<span class='line'> 91</span> * @see cwi.smilText.Time.EVENT_END
+<span class='line'> 92</span> */</span><span class="WHIT">
+<span class='line'> 93</span> </span><span class="NAME">cwi.smilText.Time.Playable.prototype.addEventListener</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">eventType</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 94</span> </span><span class="WHIT">	</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">list</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.eventListeners.get</span><span class="PUNC">(</span><span class="NAME">eventType</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 95</span> </span><span class="WHIT">	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">list</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 96</span> </span><span class="WHIT">		</span><span class="NAME">this.removeEventListener</span><span class="PUNC">(</span><span class="NAME">eventType</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 97</span> </span><span class="WHIT">		</span><span class="NAME">list.insertEnd</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 98</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 99</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>100</span> 
+<span class='line'>101</span> </span><span class="COMM">/**
+<span class='line'>102</span> * Remove a callback function as an event listener.
+<span class='line'>103</span> * @param {integer} eventType The Playable event type.
+<span class='line'>104</span> * @param {function} callback THe callback function.
+<span class='line'>105</span> * @see cwi.smilText.Time.EVENT_PLAY
+<span class='line'>106</span> * @see cwi.smilText.Time.EVENT_PAUSE
+<span class='line'>107</span> * @see cwi.smilText.Time.EVENT_STOP
+<span class='line'>108</span> * @see cwi.smilText.Time.EVENT_END
+<span class='line'>109</span> */</span><span class="WHIT">
+<span class='line'>110</span> </span><span class="NAME">cwi.smilText.Time.Playable.prototype.removeEventListener</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">eventType</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>111</span> </span><span class="WHIT">	</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">list</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.eventListeners.get</span><span class="PUNC">(</span><span class="NAME">eventType</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>112</span> </span><span class="WHIT">	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">list</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>113</span> </span><span class="WHIT">		</span><span class="NAME">list.resetIterator</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>114</span> </span><span class="WHIT">		</span><span class="KEYW">while</span><span class="PUNC">(</span><span class="NAME">list.hasNext</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>115</span> </span><span class="WHIT">			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">list.getCurrent</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>116</span> </span><span class="WHIT">				</span><span class="NAME">list.remove</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>117</span> </span><span class="WHIT">				</span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>118</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>119</span> </span><span class="WHIT">			</span><span class="NAME">list.moveToNext</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>120</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>121</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>122</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>123</span> 
+<span class='line'>124</span> </span><span class="COMM">/**
+<span class='line'>125</span> * Fire an event and notify all associated listeners. 
+<span class='line'>126</span> * @param {integer} eventType The Playable event to be fired.
+<span class='line'>127</span> * @see cwi.smilText.Time.EVENT_PLAY
+<span class='line'>128</span> * @see cwi.smilText.Time.EVENT_PAUSE
+<span class='line'>129</span> * @see cwi.smilText.Time.EVENT_STOP
+<span class='line'>130</span> * @see cwi.smilText.Time.EVENT_END
+<span class='line'>131</span> */</span><span class="WHIT">
+<span class='line'>132</span> </span><span class="NAME">cwi.smilText.Time.Playable.prototype.fireEvent</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">eventType</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>133</span> </span><span class="WHIT">	</span><span class="KEYW">switch</span><span class="PUNC">(</span><span class="NAME">eventType</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>134</span> </span><span class="WHIT">		</span><span class="KEYW">case</span><span class="WHIT"> </span><span class="NAME">cwi.smilText.Time.EVENT_PLAY</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>135</span> </span><span class="WHIT">			</span><span class="NAME">this.play</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>136</span> </span><span class="WHIT">			</span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>137</span> </span><span class="WHIT">		</span><span class="KEYW">case</span><span class="WHIT"> </span><span class="NAME">cwi.smilText.Time.EVENT_PAUSE</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>138</span> </span><span class="WHIT">			</span><span class="NAME">this.pause</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>139</span> </span><span class="WHIT">			</span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>140</span> </span><span class="WHIT">		</span><span class="KEYW">case</span><span class="WHIT"> </span><span class="NAME">cwi.smilText.Time.EVENT_STOP</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>141</span> </span><span class="WHIT">			</span><span class="NAME">this.stop</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>142</span> </span><span class="WHIT">			</span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>143</span> </span><span class="WHIT">		</span><span class="KEYW">case</span><span class="WHIT"> </span><span class="NAME">cwi.smilText.Time.EVENT_END</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>144</span> </span><span class="WHIT">			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.isPlaying</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>145</span> </span><span class="WHIT">				</span><span class="NAME">this.state</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">cwi.smilText.Time.EVENT_END</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>146</span> </span><span class="WHIT">				</span><span class="NAME">this.notifyAll</span><span class="PUNC">(</span><span class="NAME">eventType</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>147</span> </span><span class="WHIT">				</span><span class="NAME">this.notifyAll</span><span class="PUNC">(</span><span class="NAME">cwi.smilText.Time.EVENT_STOP</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>148</span> </span><span class="WHIT">				</span><span class="COMM">//this.stop();</span><span class="WHIT">
+<span class='line'>149</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>150</span> </span><span class="WHIT">			</span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>151</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>152</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>153</span> 
+<span class='line'>154</span> </span><span class="COMM">/**
+<span class='line'>155</span> * Notify all the event listeners of a given event. 
+<span class='line'>156</span> * @private
+<span class='line'>157</span> */</span><span class="WHIT">
+<span class='line'>158</span> </span><span class="NAME">cwi.smilText.Time.Playable.prototype.notifyAll</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">eventType</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>159</span> </span><span class="WHIT">	</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">list</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.eventListeners.get</span><span class="PUNC">(</span><span class="NAME">eventType</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>160</span> </span><span class="WHIT">	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">list</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>161</span> </span><span class="WHIT">		</span><span class="NAME">list.resetIterator</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>162</span> </span><span class="WHIT">		</span><span class="KEYW">while</span><span class="PUNC">(</span><span class="NAME">list.hasNext</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>163</span> </span><span class="WHIT">			</span><span class="NAME">list.getCurrent</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">apply</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>164</span> </span><span class="WHIT">			</span><span class="NAME">list.moveToNext</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>165</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>166</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>167</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>168</span> 
+<span class='line'>169</span> </span><span class="COMM">/**
+<span class='line'>170</span> * Return the current time (in milliseconds).
+<span class='line'>171</span> * @return {integer}
+<span class='line'>172</span> */</span><span class="WHIT">
+<span class='line'>173</span> </span><span class="NAME">cwi.smilText.Time.Playable.prototype.getTime</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>174</span> </span><span class="WHIT">	</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.timeNow</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>175</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>176</span> 
+<span class='line'>177</span> </span><span class="COMM">/**
+<span class='line'>178</span> * Set the current time. The seekTo method will be called whether the new time 
+<span class='line'>179</span> * is before the current time.
+<span class='line'>180</span> * @param {integer} t the new time (in milliseconds).
+<span class='line'>181</span> */</span><span class="WHIT">
+<span class='line'>182</span> </span><span class="NAME">cwi.smilText.Time.Playable.prototype.setTime</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">t</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>183</span> </span><span class="WHIT">	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.isStopped</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">this.isPaused</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>184</span> </span><span class="WHIT">		</span><span class="KEYW">return</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>185</span> </span><span class="WHIT">		
+<span class='line'>186</span> 	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.timeNow</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="NAME">t</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>187</span> </span><span class="WHIT">		</span><span class="NAME">this.seekTo</span><span class="PUNC">(</span><span class="NAME">t</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>188</span> </span><span class="WHIT">	
+<span class='line'>189</span> 	</span><span class="NAME">this.timeNow</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">t</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>190</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>191</span> 
+<span class='line'>192</span> </span><span class="COMM">/**
+<span class='line'>193</span> * Play the Playable Object.
+<span class='line'>194</span> */</span><span class="WHIT">
+<span class='line'>195</span> </span><span class="NAME">cwi.smilText.Time.Playable.prototype.play</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> 
+<span class='line'>196</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>197</span> </span><span class="WHIT">	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.externalClock</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">this.externalClock</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>198</span> </span><span class="WHIT">		</span><span class="NAME">this.setExternalClock</span><span class="PUNC">(</span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>199</span> </span><span class="WHIT">		
+<span class='line'>200</span> 	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.state</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="NAME">cwi.smilText.Time.EVENT_PLAY</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>201</span> </span><span class="WHIT">		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.state</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NAME">cwi.smilText.Time.EVENT_STOP</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT">
+<span class='line'>202</span> </span><span class="WHIT">			</span><span class="NAME">this.state</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NAME">cwi.smilText.Time.EVENT_END</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>203</span> </span><span class="WHIT">			</span><span class="NAME">this.seekTo</span><span class="PUNC">(</span><span class="NUMB">0</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>204</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>205</span> </span><span class="WHIT">		
+<span class='line'>206</span> 		</span><span class="NAME">this.notifyAll</span><span class="PUNC">(</span><span class="NAME">cwi.smilText.Time.EVENT_PLAY</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>207</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>208</span> </span><span class="WHIT">	
+<span class='line'>209</span> 	</span><span class="NAME">this.state</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">cwi.smilText.Time.EVENT_PLAY</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>210</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>211</span> 
+<span class='line'>212</span> </span><span class="COMM">/**
+<span class='line'>213</span> * Return true whether the Playable Object is playing. Otherwise, false.
+<span class='line'>214</span> * @return {boolean}
+<span class='line'>215</span> */</span><span class="WHIT">
+<span class='line'>216</span> </span><span class="NAME">cwi.smilText.Time.Playable.prototype.isPlaying</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> 
+<span class='line'>217</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>218</span> </span><span class="WHIT">	</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.state</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NAME">cwi.smilText.Time.EVENT_PLAY</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>219</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>220</span> 
+<span class='line'>221</span> </span><span class="COMM">/**
+<span class='line'>222</span> * Pause the Playable Object.
+<span class='line'>223</span> */</span><span class="WHIT">
+<span class='line'>224</span> </span><span class="NAME">cwi.smilText.Time.Playable.prototype.pause</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> 
+<span class='line'>225</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>226</span> </span><span class="WHIT">	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.state</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NAME">cwi.smilText.Time.EVENT_PLAY</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>227</span> </span><span class="WHIT">		</span><span class="NAME">this.notifyAll</span><span class="PUNC">(</span><span class="NAME">cwi.smilText.Time.EVENT_PAUSE</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>228</span> </span><span class="WHIT">		</span><span class="NAME">this.state</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">cwi.smilText.Time.EVENT_PAUSE</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>229</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>230</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>231</span> 
+<span class='line'>232</span> </span><span class="COMM">/**
+<span class='line'>233</span> * Return true whether the Playable Object is paused. Otherwise, false.
+<span class='line'>234</span> * @return {boolean}
+<span class='line'>235</span> */</span><span class="WHIT">
+<span class='line'>236</span> </span><span class="NAME">cwi.smilText.Time.Playable.prototype.isPaused</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> 
+<span class='line'>237</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>238</span> </span><span class="WHIT">	</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.state</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NAME">cwi.smilText.Time.EVENT_PAUSE</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>239</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>240</span> 
+<span class='line'>241</span> </span><span class="COMM">/**
+<span class='line'>242</span> * Stop the Playable Object.
+<span class='line'>243</span> */</span><span class="WHIT">
+<span class='line'>244</span> </span><span class="NAME">cwi.smilText.Time.Playable.prototype.stop</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> 
+<span class='line'>245</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>246</span> </span><span class="WHIT">	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.state</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="NAME">cwi.smilText.Time.EVENT_STOP</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>247</span> </span><span class="WHIT">		</span><span class="NAME">this.notifyAll</span><span class="PUNC">(</span><span class="NAME">cwi.smilText.Time.EVENT_STOP</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>248</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>249</span> </span><span class="WHIT">	
+<span class='line'>250</span> 	</span><span class="COMM">//if (this.state != cwi.smilText.Time.EVENT_END) {</span><span class="WHIT">
+<span class='line'>251</span> </span><span class="WHIT">		</span><span class="NAME">this.seekTo</span><span class="PUNC">(</span><span class="NUMB">0</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>252</span> </span><span class="WHIT">	</span><span class="COMM">//}</span><span class="WHIT">
+<span class='line'>253</span> </span><span class="WHIT">	</span><span class="NAME">this.state</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">cwi.smilText.Time.EVENT_STOP</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>254</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>255</span> 
+<span class='line'>256</span> </span><span class="COMM">/**
+<span class='line'>257</span> * Return true whether the Playable Object is stopped. Otherwise, false.
+<span class='line'>258</span> * @return {boolean}
+<span class='line'>259</span> */</span><span class="WHIT">
+<span class='line'>260</span> </span><span class="NAME">cwi.smilText.Time.Playable.prototype.isStopped</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> 
+<span class='line'>261</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>262</span> </span><span class="WHIT">	</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.state</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NAME">cwi.smilText.Time.EVENT_STOP</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>263</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>264</span> 
+<span class='line'>265</span> </span><span class="COMM">/**
+<span class='line'>266</span> * Perform the seek operation to a given time moment. The current time is also updated.
+<span class='line'>267</span> * @param {integer} t the desired time instant (in milliseconds).
+<span class='line'>268</span> */</span><span class="WHIT">
+<span class='line'>269</span> </span><span class="NAME">cwi.smilText.Time.Playable.prototype.seekTo</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">t</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>270</span> </span><span class="WHIT">	</span><span class="NAME">this.timeNow</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">t</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>271</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>272</span> 
+<span class='line'>273</span> </span><span class="COMM">/**
+<span class='line'>274</span>  * Setup the timing source.
+<span class='line'>275</span>  * @param {string} flag true if an external clock source will be used. In this case,
+<span class='line'>276</span>  * the setTime method must be called by the external clock. Otherwise, false. 
+<span class='line'>277</span>  * And an internal clock will be used.
+<span class='line'>278</span>  */</span><span class="WHIT">
+<span class='line'>279</span> </span><span class="NAME">cwi.smilText.Time.Playable.prototype.setExternalClock</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">flag</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>280</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>281</span> </span><span class="WHIT">	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.externalClock</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NAME">flag</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>282</span> </span><span class="WHIT">		</span><span class="KEYW">return</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>283</span> </span><span class="WHIT">	
+<span class='line'>284</span> 	</span><span class="NAME">this.externalClock</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">flag</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>285</span> </span><span class="WHIT">	
+<span class='line'>286</span> 	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">this.externalClock</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>287</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>288</span> </span><span class="WHIT">		</span><span class="NAME">cwi.smilText.Time.getInstance</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">register</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>289</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>290</span> </span><span class="WHIT">		</span><span class="NAME">cwi.smilText.Time.getInstance</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">unregister</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>291</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>292</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>293</span> 
+<span class='line'>294</span> 
+<span class='line'>295</span> 
+<span class='line'>296</span> 
+<span class='line'>297</span> 
+<span class='line'>298</span> </span><span class="COMM">/* Solve library dependency */</span><span class="WHIT">
+<span class='line'>299</span> </span><span class="NAME">Import</span><span class="PUNC">(</span><span class="STRN">"cwi.adt.DoubleLinkedList"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>300</span> </span><span class="NAME">Import</span><span class="PUNC">(</span><span class="STRN">"cwi.smilText.Time.Playable"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>301</span> 
+<span class='line'>302</span> </span><span class="COMM">/**
+<span class='line'>303</span>  * Hold the smilText time engine instance, which controls the documents' scheduling.
+<span class='line'>304</span>  */</span><span class="WHIT">
+<span class='line'>305</span> </span><span class="NAME">cwi.smilText.Time.instance</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>306</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>307</span> </span><span class="WHIT">	
+<span class='line'>308</span> 	</span><span class="COMM">/** 
+<span class='line'>309</span> 	* Variables
+<span class='line'>310</span> 	* @private
+<span class='line'>311</span> 	*/</span><span class="WHIT">
+<span class='line'>312</span> </span><span class="WHIT">	</span><span class="NAME">this.list</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">DoubleLinkedList</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">		</span><span class="COMM">// Keep registered documents.</span><span class="WHIT">
+<span class='line'>313</span> </span><span class="WHIT">	</span><span class="NAME">this.timeInc</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">100</span><span class="PUNC">;</span><span class="WHIT">						</span><span class="COMM">// Time increment.</span><span class="WHIT">
+<span class='line'>314</span> </span><span class="WHIT">	
+<span class='line'>315</span> 	</span><span class="COMM">/**
+<span class='line'>316</span> 	* Store a given document.
+<span class='line'>317</span> 	* @private
+<span class='line'>318</span> 	* @param {cwi.smilText.Time.Playable} doc the playable object to be registered
+<span class='line'>319</span> 	* @see cwi.smilText.Time.Playable
+<span class='line'>320</span> 	*/</span><span class="WHIT">
+<span class='line'>321</span> </span><span class="WHIT">	</span><span class="NAME">this.register</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">doc</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>322</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>323</span> </span><span class="WHIT">		</span><span class="NAME">this.list.insertEnd</span><span class="PUNC">(</span><span class="NAME">doc</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>324</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>325</span> </span><span class="WHIT">	
+<span class='line'>326</span> 	</span><span class="COMM">/**
+<span class='line'>327</span> 	* Remove a given document from the time engine.
+<span class='line'>328</span> 	* @private
+<span class='line'>329</span> 	* @param {cwi.smilText.Time.Playable} doc the playable object to be unregistered
+<span class='line'>330</span> 	* @return {boolean}
+<span class='line'>331</span> 	* @see cwi.smilText.Time.Playable
+<span class='line'>332</span> 	*/</span><span class="WHIT">
+<span class='line'>333</span> </span><span class="WHIT">	</span><span class="NAME">this.unregister</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">doc</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>334</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>335</span> </span><span class="WHIT">		</span><span class="NAME">this.list.resetIterator</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>336</span> </span><span class="WHIT">		</span><span class="KEYW">while</span><span class="PUNC">(</span><span class="NAME">this.list.hasNext</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>337</span> </span><span class="WHIT">		</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>338</span> </span><span class="WHIT">			</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">d</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.list.getCurrent</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>339</span> </span><span class="WHIT">			</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">d</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NAME">doc</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>340</span> </span><span class="WHIT">				</span><span class="NAME">this.list.remove</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>341</span> </span><span class="WHIT">				</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>342</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>343</span> </span><span class="WHIT">			</span><span class="NAME">this.list.moveToNext</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>344</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>345</span> </span><span class="WHIT">		
+<span class='line'>346</span> 		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>347</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>348</span> </span><span class="WHIT">	
+<span class='line'>349</span> 	</span><span class="COMM">/**
+<span class='line'>350</span> 	 * Update the current time of registered playable objects.
+<span class='line'>351</span> 	 * @private
+<span class='line'>352</span> 	 */</span><span class="WHIT">	
+<span class='line'>353</span> 	</span><span class="NAME">this.updateTime</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>354</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>355</span> </span><span class="WHIT">		</span><span class="NAME">this.list.resetIterator</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>356</span> </span><span class="WHIT">		</span><span class="KEYW">while</span><span class="PUNC">(</span><span class="NAME">this.list.hasNext</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>357</span> </span><span class="WHIT">		</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>358</span> </span><span class="WHIT">			</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">d</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.list.getCurrent</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>359</span> </span><span class="WHIT">			</span><span class="COMM">// update time</span><span class="WHIT">
+<span class='line'>360</span> </span><span class="WHIT">			</span><span class="NAME">d.setTime</span><span class="PUNC">(</span><span class="NAME">d.getTime</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">this.timeInc</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>361</span> </span><span class="WHIT">			</span><span class="NAME">this.list.moveToNext</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>362</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>363</span> </span><span class="WHIT">		
+<span class='line'>364</span> 		</span><span class="NAME">setTimeout</span><span class="PUNC">(</span><span class="STRN">"cwi.smilText.Time.getInstance().updateTime()"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.timeInc</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>365</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>366</span> </span><span class="WHIT">	
+<span class='line'>367</span> 	</span><span class="COMM">/* Make sure the time engine is started */</span><span class="WHIT">
+<span class='line'>368</span> </span><span class="WHIT">	</span><span class="NAME">this.updateTime</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>369</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>370</span> 
+<span class='line'>371</span> </span><span class="COMM">/**
+<span class='line'>372</span> * Register a given playable object to be scheduled by the time engine.
+<span class='line'>373</span> * @param {cwi.smilText.Time.Playable} doc the playable object to be registered
+<span class='line'>374</span> * @see cwi.smilText.Time.Playable
+<span class='line'>375</span> */</span><span class="WHIT">
+<span class='line'>376</span> </span><span class="NAME">cwi.smilText.Time.register</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">doc</span><span class="PUNC">)</span><span class="WHIT"> 
+<span class='line'>377</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>378</span> </span><span class="WHIT">	</span><span class="NAME">cwi.smilText.Time.getInstance</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">register</span><span class="PUNC">(</span><span class="NAME">doc</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>379</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>380</span> 
+<span class='line'>381</span> </span><span class="COMM">/**
+<span class='line'>382</span> * Remove a given playable object from the time engine scheduler.
+<span class='line'>383</span> * @param {cwi.smilText.Time.Playable} doc the playable object to be unregistered
+<span class='line'>384</span> * @return {boolean}
+<span class='line'>385</span> * @see cwi.smilText.Time.Playable
+<span class='line'>386</span> */</span><span class="WHIT">
+<span class='line'>387</span> </span><span class="NAME">cwi.smilText.Time.unregister</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">doc</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>388</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>389</span> </span><span class="WHIT">	</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">cwi.smilText.Time.getInstance</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">unregister</span><span class="PUNC">(</span><span class="NAME">doc</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>390</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>391</span> 
+<span class='line'>392</span> </span><span class="COMM">/**
+<span class='line'>393</span> * Get the singleton instance of the time engine.
+<span class='line'>394</span> * @return {cwi.smilText.Time}
+<span class='line'>395</span> */</span><span class="WHIT">
+<span class='line'>396</span> </span><span class="NAME">cwi.smilText.Time.getInstance</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>397</span> </span><span class="WHIT">	</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">cwi.smilText.Time.instance</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>398</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>399</span> </span></pre></body></html>

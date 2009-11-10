@@ -31,6 +31,30 @@ Namespace("cwi.smilText.Time");
 
 
 
+/* Solve library dependencies */
+Import("cwi.adt.Hashtable");
+Import("cwi.adt.DoubleLinkedList");
+
+/**
+ * Stand for the play event of a Playable object.
+ */
+cwi.smilText.Time.EVENT_PLAY = 1;
+
+/**
+ * Stand for the pause event of a Playable object.
+ */
+cwi.smilText.Time.EVENT_PAUSE = 2;
+
+/**
+ * Stand for the stop event of a Playable object.
+ */
+cwi.smilText.Time.EVENT_STOP = 0;
+
+/**
+ * Stand for the natural end event of a Playable object.
+ */
+cwi.smilText.Time.EVENT_END = -1;
+
 /**
  * Define the Playable interface.
  * @constructor
@@ -39,16 +63,108 @@ Namespace("cwi.smilText.Time");
 cwi.smilText.Time.Playable = function()
 {
 	JSINER.extend(this);
-	
+		
 	/**
 	* Variables
 	* @private
 	*/
-	this.timeNow = -1;				// Keep the current time.
-	this.state = 0;					// state: 0 (stopped); 1 (playing); 2 (paused)
-	this.externalClock = null;		// True whether the time is controlled by an external source. 
-									// False, otherwise.
+	this.timeNow = -1;							// Keep the current time.
+	this.state = 0;								// state: 0 (stopped); 1 (playing); 2 (paused)
+	this.externalClock = null;					// True whether the time is controlled by an external source. 
+												// False, otherwise.
+	this.eventListeners = new Hashtable();		// Keep event listeners
+	
+	// Creates a list for each type of event.
+	this.eventListeners.put(cwi.smilText.Time.EVENT_STOP, new DoubleLinkedList());
+	this.eventListeners.put(cwi.smilText.Time.EVENT_PLAY, new DoubleLinkedList());
+	this.eventListeners.put(cwi.smilText.Time.EVENT_PAUSE, new DoubleLinkedList());
+	this.eventListeners.put(cwi.smilText.Time.EVENT_END, new DoubleLinkedList());
 };
+
+/**
+* Add a callback function as a listener of an event. Listeners are notified in the event transition.
+* @param {integer} eventType The Playable event type.
+* @param {function} callback THe callback function.
+* @see cwi.smilText.Time.EVENT_PLAY
+* @see cwi.smilText.Time.EVENT_PAUSE
+* @see cwi.smilText.Time.EVENT_STOP
+* @see cwi.smilText.Time.EVENT_END
+*/
+cwi.smilText.Time.Playable.prototype.addEventListener = function(eventType, callback) {
+	var list = this.eventListeners.get(eventType);
+	if (list && callback) {
+		this.removeEventListener(eventType, callback);
+		list.insertEnd(callback);
+	}
+}
+
+/**
+* Remove a callback function as an event listener.
+* @param {integer} eventType The Playable event type.
+* @param {function} callback THe callback function.
+* @see cwi.smilText.Time.EVENT_PLAY
+* @see cwi.smilText.Time.EVENT_PAUSE
+* @see cwi.smilText.Time.EVENT_STOP
+* @see cwi.smilText.Time.EVENT_END
+*/
+cwi.smilText.Time.Playable.prototype.removeEventListener = function(eventType, callback) {
+	var list = this.eventListeners.get(eventType);
+	if (list && callback) {
+		list.resetIterator();
+		while(list.hasNext()) {
+			if (list.getCurrent() == callback) {
+				list.remove();
+				break;
+			}
+			list.moveToNext();
+		}
+	}
+}
+
+/**
+* Fire an event and notify all associated listeners. 
+* @param {integer} eventType The Playable event to be fired.
+* @see cwi.smilText.Time.EVENT_PLAY
+* @see cwi.smilText.Time.EVENT_PAUSE
+* @see cwi.smilText.Time.EVENT_STOP
+* @see cwi.smilText.Time.EVENT_END
+*/
+cwi.smilText.Time.Playable.prototype.fireEvent = function(eventType) {
+	switch(eventType) {
+		case cwi.smilText.Time.EVENT_PLAY:
+			this.play();
+			break;
+		case cwi.smilText.Time.EVENT_PAUSE:
+			this.pause();
+			break;
+		case cwi.smilText.Time.EVENT_STOP:
+			this.stop();
+			break;
+		case cwi.smilText.Time.EVENT_END:
+			if (this.isPlaying()) {
+				this.state = cwi.smilText.Time.EVENT_END;
+				this.notifyAll(eventType);
+				this.notifyAll(cwi.smilText.Time.EVENT_STOP);
+				//this.stop();
+			}
+			break;
+	}
+}
+
+/**
+* Notify all the event listeners of a given event. 
+* @private
+*/
+cwi.smilText.Time.Playable.prototype.notifyAll = function(eventType) {
+	var list = this.eventListeners.get(eventType);
+	if (list) {
+		list.resetIterator();
+		while(list.hasNext()) {
+			list.getCurrent().apply(this);
+			list.moveToNext();
+		}
+	}
+}
 
 /**
 * Return the current time (in milliseconds).
@@ -80,8 +196,17 @@ cwi.smilText.Time.Playable.prototype.play = function()
 {
 	if (this.externalClock == undefined || this.externalClock == null)
 		this.setExternalClock(false);
+		
+	if (this.state != cwi.smilText.Time.EVENT_PLAY) {
+		if (this.state == cwi.smilText.Time.EVENT_STOP ||
+			this.state == cwi.smilText.Time.EVENT_END) {
+			this.seekTo(0);
+		}
+		
+		this.notifyAll(cwi.smilText.Time.EVENT_PLAY);
+	}
 	
-	this.state = 1;
+	this.state = cwi.smilText.Time.EVENT_PLAY;
 }
 
 /**
@@ -90,7 +215,7 @@ cwi.smilText.Time.Playable.prototype.play = function()
 */
 cwi.smilText.Time.Playable.prototype.isPlaying = function() 
 {
-	return this.state == 1;
+	return this.state == cwi.smilText.Time.EVENT_PLAY;
 }
 
 /**
@@ -98,7 +223,10 @@ cwi.smilText.Time.Playable.prototype.isPlaying = function()
 */
 cwi.smilText.Time.Playable.prototype.pause = function() 
 {
-	this.state = 2;
+	if (this.state == cwi.smilText.Time.EVENT_PLAY) {
+		this.notifyAll(cwi.smilText.Time.EVENT_PAUSE);
+		this.state = cwi.smilText.Time.EVENT_PAUSE;
+	}
 }
 
 /**
@@ -107,7 +235,7 @@ cwi.smilText.Time.Playable.prototype.pause = function()
 */
 cwi.smilText.Time.Playable.prototype.isPaused = function() 
 {
-	return this.state == 2;
+	return this.state == cwi.smilText.Time.EVENT_PAUSE;
 }
 
 /**
@@ -115,8 +243,14 @@ cwi.smilText.Time.Playable.prototype.isPaused = function()
 */
 cwi.smilText.Time.Playable.prototype.stop = function() 
 {
-	this.state = 0;
-	this.seekTo(0);
+	if (this.state != cwi.smilText.Time.EVENT_STOP) {
+		this.notifyAll(cwi.smilText.Time.EVENT_STOP);
+	}
+	
+	//if (this.state != cwi.smilText.Time.EVENT_END) {
+		this.seekTo(0);
+	//}
+	this.state = cwi.smilText.Time.EVENT_STOP;
 }
 
 /**
@@ -125,7 +259,7 @@ cwi.smilText.Time.Playable.prototype.stop = function()
 */
 cwi.smilText.Time.Playable.prototype.isStopped = function() 
 {
-	return this.state == 0;
+	return this.state == cwi.smilText.Time.EVENT_STOP;
 }
 
 /**

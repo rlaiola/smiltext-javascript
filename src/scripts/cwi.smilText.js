@@ -39,7 +39,7 @@ Import("cwi.util");
 Import("cwi.smilText.Time.Playable");
 
 /**
- * Implementation of a SmilText Document
+ * Implementation of a SmilText Document.
  * @constructor
  * @augments cwi.smilText.Time.Playable
  * @param {string} region the id of the region where the smilText document will be rendered.
@@ -127,18 +127,85 @@ cwi.smilText.STDocument.prototype.applyStyle = function(typeLayout, id, style)
 }
 
 /**
+ * Return the style properties of a given layout (xml).
+ * @private
+ */
+cwi.smilText.STDocument.prototype.getStyleXML = function(typeLayout, id)
+{
+	var str = "";
+	
+	switch(typeLayout)
+	{
+		case 'smiltext':
+			if (this.getStoredAttribute(id, 'dur'))
+				str += " dur=\'" + this.getStoredAttribute(id, 'dur') + "\'";
+			if (this.getStoredAttribute(id, 'width'))
+				str += " width=\'" + this.getStoredAttribute(id, 'width') + "px\'";
+			if (this.getStoredAttribute(id, 'height'))
+				str += " height=\'" + this.getStoredAttribute(id, 'height') + "px\'";
+		case 'textstyle':
+			if (this.getStoredAttribute(id, 'textmode'))
+				str += " textMode=\'" + this.getStoredAttribute(id, 'textmode') + "\'";
+			if (this.getStoredAttribute(id, 'textplace'))
+				str += " textPlace=\'" + this.getStoredAttribute(id, 'textplace') + "\'";
+			if (this.getStoredAttribute(id, 'textconceal'))
+				str += " textConceal=\'" + this.getStoredAttribute(id, 'textconceal') + "\'";
+			if (this.getStoredAttribute(id, 'textrate'))
+				str += " textRate=\'" + this.getStoredAttribute(id, 'textrate') + "\'";
+		case 'div':
+			if (this.getStoredAttribute(id, 'textalign'))
+				str += " textAlign=\'" + this.getStoredAttribute(id, 'textalign') + "\'";
+		case 'p':
+			if (this.getStoredAttribute(id, 'xml:space'))
+				str += " xml:space=\'" + this.getStoredAttribute(id, 'xml:space') + "\'";
+			if (this.getStoredAttribute(id, 'textwrapoption'))
+				str += " textWrapOption=\'" + this.getStoredAttribute(id, 'textwrapoption') + "\'";
+			if (this.getStoredAttribute(id, 'textwritingmode'))
+				str += " textWritingMode=\'" + this.getStoredAttribute(id, 'textwritingmode') + "\'";
+		case 'span':
+			if (this.getStoredAttribute(id, 'textbackgroundcolor'))
+				str += " textBackgroundColor=\'" + this.getStoredAttribute(id, 'textbackgroundcolor') + "\'";
+			if (this.getStoredAttribute(id, 'textcolor'))
+				str += " textColor=\'" + this.getStoredAttribute(id, 'textcolor') + "\'";
+			if (this.getStoredAttribute(id, 'textfontfamily'))
+				str += " textFontFamily=\'" + this.getStoredAttribute(id, 'textfontfamily') + "\'";
+			if (this.getStoredAttribute(id, 'textfontsize'))
+				str += " textFontSize=\'" + this.getStoredAttribute(id, 'textfontsize') + "\'";
+			if (this.getStoredAttribute(id, 'textfontstyle'))
+				str += " textFontStyle=\'" + this.getStoredAttribute(id, 'textfontstyle') + "\'";
+			if (this.getStoredAttribute(id, 'textfontweight'))
+				str += " textFontWeight=\'" + this.getStoredAttribute(id, 'textfontweight') + "\'";
+			if (this.getStoredAttribute(id, 'textstyle'))
+				str += " textStyle=\'" + this.getStoredAttribute(id, 'textstyle') + "\'";
+
+			if (typeLayout != 'span' && typeLayout != 'textstyle') {
+				if (this.getStoredAttribute(id, 'textdirection'))
+					str += " textDirection=\'" + this.getStoredAttribute(id, 'textdirection') + "\'";
+			}
+	}
+	
+	return str;
+}
+
+/**
 * Return the string representation of the smilText document.
 * @return {string}
 */
 cwi.smilText.STDocument.prototype.getXML = function()
 {
+	var header = "<smilText>";
 	var str = "";
-	var endTag = "";
+	var endTag = "\n</smilText>";
 	var smilTextFound = false;
 	var lastType = -1;	// 0: tag; 1: text
 	var currentTime = 0;
+	var restorePlay = false;
+	var dur = null; // explicit duration of the smiltext container
 	
-	this.pause();
+	if (this.isPlaying()) {
+		this.pause();
+		restorePlay = true;
+	}
 	
 	var tempQ = new PriorityQueue();
 	while (this.doneQueue && !this.doneQueue.isEmpty()) 
@@ -153,60 +220,70 @@ cwi.smilText.STDocument.prototype.getXML = function()
 			 	if (st[1][1].length > 8 && st[1][1].substring(0,8) == 'smiltext') {
 					id = 'smiltext';
 					smilTextFound = true;
+					if (st[1][1] != '')
+						header = "<smilText id=\'" + st[1][1] + "\' " + this.getStyleXML("smiltext", st[1][1]) + " >";
 			 	}
 								
-				if (smilTextFound) {	
+				//if (smilTextFound) {	
 				 	switch(id)
 				 	{
 				 		case 'smiltext':  // smiltext tag
-				 			str += "<smilText ";
-				 			endTag = "\n</smilText>" + endTag;
+				 			//str += "<smilText ";
+				 			//endTag = "\n</smilText>" + endTag;
 				 			break;
 				 		case 'd': // div 
 				 			str += "\n<div ";
+				 			str += "id=\'" + st[1][1] + "\' " + this.getStyleXML("div", st[1][1]) + " >";
 				 			endTag = "\n</div>" + endTag;
 				 			break;
 				 		case 'p': // p
 				 			str += "\n<p ";
+				 			str += "id=\'" + st[1][1] + "\' " + this.getStyleXML("p", st[1][1]) + " >";
 				 			endTag = "\n</p>" + endTag;
 				 			break;
 				 		case 's': // span
 				 			str += "\n<span ";
+				 			str += "id=\'" + st[1][1] + "\' " + this.getStyleXML("span", st[1][1]) + " >";
 				 			endTag = "\n</span>" + endTag;
 				 			break;
-				 	}
+				 //	}
 				 	
-				 	str += "id=\'" + st[1][1] + "\' >\n";
 				 	lastType = 0;
 				}
 				
 				break;
 			case cwi.smilText.Render.appendLineBreak:
-				if (smilTextFound) {
-					str += "<br/>";
+				//if (smilTextFound) {
+					str += "\n<br/>";
 					lastType = 0;
-				}
+				//}
 				break;
 			case cwi.smilText.Render.appendText:
-				if (smilTextFound && t != currentTime) {
+				if (t != currentTime) {
+				//if (smilTextFound && t != currentTime) {
 					currentTime = t;
-					str += "\n<tev begin=\'" + t/1000.0 + "s\' />\n";
+					str += "\n<tev begin=\'" + t/1000.0 + "s\' />";
 					lastType = 0;
 				}
 				
-				if (smilTextFound) {
+				//if (smilTextFound) {
 					if (lastType == 1)
 		 				str += " ";	// Add white space
+					else str += "\n";
 					str += st[1][1];
 					lastType = 1;
-				}
+				//}
 				break;
 			case cwi.smilText.Render.clearLayout:
-				if (smilTextFound) {
-					str += "\n<clear begin=\'" + t/1000.0 + "s\' />\n";
+				//if (smilTextFound) {
+					str += "\n<clear begin=\'" + t/1000.0 + "s\' />";
 					lastType = 0;
 					currentTime = t;
-				}
+				//}
+				break;
+			case cwi.smilText.Render.closeContainer:
+				// skipped: got at getStyleXML
+				//dur = t;
 				break;
 		}
 		
@@ -224,61 +301,73 @@ cwi.smilText.STDocument.prototype.getXML = function()
 		{
 			case cwi.smilText.Render.appendContainer:
 				var id = st[1][1].charAt(0);
-			 	if (st[1][1].length > 8 && st[1][1].substring(0,8) == 'smiltext') {
+			 	if (!smilTextFound && st[1][1].length > 8 && st[1][1].substring(0,8) == 'smiltext') {
 					id = 'smiltext';
 					smilTextFound = true;
+					if (st[1][1] != '')
+						header = "<smilText id=\'" + st[1][1] + "\' " + this.getStyleXML("smiltext", st[1][1]) + " >";
 			 	}
 								
-				if (smilTextFound) {	
+				//if (smilTextFound) {	
 				 	switch(id)
 				 	{
 				 		case 'smiltext':  // smiltext tag
-				 			str += "<smilText ";
-				 			endTag = "\n</smilText>" + endTag;
+				 			//str += "<smilText ";
+				 			//endTag = "\n</smilText>" + endTag;
 				 			break;
 				 		case 'd': // div 
-				 			str += "<div ";
+				 			str += "\n<div ";
+				 			str += "id=\'" + st[1][1] + "\' " + this.getStyleXML("div", st[1][1]) + " >";
 				 			endTag = "\n</div>" + endTag;
 				 			break;
 				 		case 'p': // p
-				 			str += "<p ";
+				 			str += "\n<p ";
+				 			str += "id=\'" + st[1][1] + "\' " + this.getStyleXML("p", st[1][1]) + " >";
 				 			endTag = "\n</p>" + endTag;
 				 			break;
 				 		case 's': // span
-				 			str += "<span ";
+				 			str += "\n<span ";
+				 			str += "id=\'" + st[1][1] + "\' " + this.getStyleXML("span", st[1][1]) + " >";
 				 			endTag = "\n</span>" + endTag;
 				 			break;
 				 	}
 				 	
-				 	str += "id=\'" + st[1][1] + "\' >\n";
 				 	lastType = 0;
-				}
+				//}
 				
 				break;
 			case cwi.smilText.Render.appendLineBreak:
-				if (smilTextFound) {
-					str += "<br/>";
+				//if (smilTextFound) {
+					str += "\n<br/>";
 					lastType = 0;
-				}
+				//}
 				break;
 			case cwi.smilText.Render.appendText:
-				if (smilTextFound && t != currentTime) {
+				if (t != currentTime) {
+				//if (smilTextFound && t != currentTime) {
 					currentTime = t;
-					str += "\n<tev begin=\'" + t/1000.0 + "s\' />\n";
+					str += "\n<tev begin=\'" + t/1000.0 + "s\' />";
 					lastType = 0;
 				}
 		
-				if (smilTextFound) {
-					str += st[1][1];
-					lastType = 1;
-				}
+				//if (smilTextFound) {
+				  if (lastType == 1)
+	 			    str += " ";	// Add white space
+				  else str += "\n";
+				  str += st[1][1];
+				  lastType = 1;
+				//}
 				break;
 			case cwi.smilText.Render.clearLayout:
-				if (smilTextFound) {
-					str += "\n<clear begin=\'" + t/1000.0 + "s\' />\n";
+				//if (smilTextFound) {
+					str += "\n<clear begin=\'" + t/1000.0 + "s\' />";
 					lastType = 0;
 					currentTime = t;
-				}
+				//}
+				break;
+			case cwi.smilText.Render.closeContainer:
+				// skipped: got at getStyleXML
+				//dur = t;
 				break;
 		}
 		// st[0] : function	| st[1] : array of arguments
@@ -288,11 +377,21 @@ cwi.smilText.STDocument.prototype.getXML = function()
 	}
 	this.timingQueue = tempQ;
 	
+	if (dur) {
+		// it has an explicit duration
+		header = header.substring(0, header.length - 2) + " dur=\'" + (dur/1000.0) + "s\' >";
+	} 
+	str = header + str;
+	
 	// Issue end tag
 	if (endTag) {
 		str += endTag;
 	}
 
+	if (restorePlay) {
+		this.play();
+	}
+	
 	return str;
 }
 
@@ -442,6 +541,12 @@ cwi.smilText.STDocument.prototype.processTimingQueue = function()
 				st[0].apply(this, st[1]);
 				
 				this.doneQueue.push(t, st);
+				
+				// If it is animated the document never ends.
+				if (this.timingQueue.isEmpty() && !this.motionEntry) {
+					// notify event listeners: this was the last entry
+					cwi.smilText.STDocument.superClass.fireEvent.call(this, cwi.smilText.Time.EVENT_END);
+				}		
 			} else break;
 		}
 		else break;
@@ -692,6 +797,24 @@ cwi.smilText.Parser.parseString = function(xmlStr, region)
 }
 
 /**
+* Parse a HMTL element and return a smilText object.
+* @param {string} element The HTML element containing the smilText specification.
+* @param {string} region The id of the rendering region.
+* @return {cwi.smilText.STDocument}
+* @see cwi.smilText.STDocument
+*/
+cwi.smilText.Parser.parseHTMLElement = function(element, region)
+{
+	var stdoc = new STDocument(region);
+
+	if (element) {
+		cwi.smilText.Parser.parseSmilTextElem(stdoc, element, region, 0, undefined);
+	}
+	
+	return stdoc;
+}
+
+/**
 * Parse a given xml document. So far, the tags are case sensitive.
 * @private
 */
@@ -752,7 +875,7 @@ cwi.smilText.Parser.parseSmilTextElem = function(doc, elem, layout, currentTime,
 	else force = false;
 	
 	// Put smilText in a DIV
-	if (elem.nodeName.toLowerCase() == 'smiltext') {
+	if (elem.nodeName.toLowerCase() == 'smiltext' || elem.nodeName.toLowerCase() == 'smil:smiltext') {
 		var smiltextID = "smiltext" + Math.random()*10000;
 
 		// Clear parent container before hand.
@@ -821,6 +944,7 @@ cwi.smilText.Parser.parseSmilTextElem = function(doc, elem, layout, currentTime,
 				/* Parse BasicText Module
 				/********************/
 				
+				case 'smil:tev':
 				case 'tev':
 				  var b = null;
 				  var n = null;
@@ -868,7 +992,8 @@ cwi.smilText.Parser.parseSmilTextElem = function(doc, elem, layout, currentTime,
 				  	  doc.addTimingEntry(cwi.smilText.Render.clearLayout, new Array(doc, layout, force), currentTime * 1000);
 				  }
 				  
-				  break;    
+				  break;   
+				case 'smil:clear':
 				case 'clear':
 				  var b = null;
 				  var n = null;
@@ -915,6 +1040,7 @@ cwi.smilText.Parser.parseSmilTextElem = function(doc, elem, layout, currentTime,
 				  doc.addTimingEntry(cwi.smilText.Render.clearLayout, new Array(doc, layout, force), currentTime * 1000);
 				  
 				  break;
+				case 'smil:br':
 				case 'br':
 				  if (doc.getStoredAttribute(layout, 'textmode') != "crawl") {
 					doc.addTimingEntry(cwi.smilText.Render.appendLineBreak, new Array(doc, layout, force), currentTime * 1000);
@@ -925,6 +1051,7 @@ cwi.smilText.Parser.parseSmilTextElem = function(doc, elem, layout, currentTime,
 				/* Parse TextStyling Module
 				/********************/
 				
+				case 'smil:div':
 				case 'div':
 				  // check whether attributes exist
 				  
@@ -948,6 +1075,7 @@ cwi.smilText.Parser.parseSmilTextElem = function(doc, elem, layout, currentTime,
 				  
 				  currentTime = cwi.smilText.Parser.parseSmilTextElem(doc, elem.childNodes[j], divID, currentTime, dur);
 				  break;
+				case 'smil:p':
 				case 'p':
 				  // check whether attributes exist
 				  
@@ -971,6 +1099,7 @@ cwi.smilText.Parser.parseSmilTextElem = function(doc, elem, layout, currentTime,
 				  
 				  currentTime = cwi.smilText.Parser.parseSmilTextElem(doc, elem.childNodes[j], pID, currentTime, dur);
 				  break;
+				case 'smil:span':
 				case 'span':
 				  // check whether attributes exist
 				  
@@ -1037,6 +1166,7 @@ cwi.smilText.Parser.parseAttributes = function(doc, id, elem)
 		
 		switch(elemName)
 		{
+		    case 'smil:smiltext':
 			case 'smiltext':
 				switch(attr)
 				{
@@ -1076,6 +1206,7 @@ cwi.smilText.Parser.parseAttributes = function(doc, id, elem)
 					doc.updateAttribute(id, attr, val);
 					break;
 				}
+			case 'smil:div':
 			case 'div':
 				switch(attr)
 				{
@@ -1088,6 +1219,7 @@ cwi.smilText.Parser.parseAttributes = function(doc, id, elem)
 					doc.updateAttribute(id, attr, val);
 					break;
 				}
+			case 'smil:p':
 			case 'p':
 				switch(attr)
 				{
@@ -1103,6 +1235,7 @@ cwi.smilText.Parser.parseAttributes = function(doc, id, elem)
 					doc.updateAttribute(id, attr, val);
 					break;
 				}
+			case 'smil:span':
 			case 'span':
 				switch(attr)
 				{
@@ -1233,7 +1366,7 @@ cwi.smilText.Render.clearLayout = function(doc, layout, force)
 /**
  * Append a container to a given region.
  * @param {cwi.smilText.STDocument} doc the smilText document.
- * @param {string} containerName the name of the new container.	It must be unique 
+ * @param {string} containerName the name (id) of the new container. It must be unique 
  * and start with smiltext, div, p or span.
  * @param {string} layout the id of the rendering region.
  * @param {string} force true to guaratee that the primitive will be issued.
@@ -1581,6 +1714,10 @@ cwi.smilText.Render.cps = 1; // 20px/s
  */
 cwi.smilText.Render.scrollticker = function(doc, layout, dir)
 {
+	// there is no layout .... yet
+	if (!document.getElementById(layout))
+		return;
+	
 	var mq = document.getElementById(layout).parentNode;
 	mq.style.overflow='hidden';
 	var mqPosition = mq.style.position;
