@@ -543,7 +543,8 @@ cwi.smilText.STDocument.prototype.processTimingQueue = function()
 				this.doneQueue.push(t, st);
 				
 				// If it is animated the document never ends.
-				if (this.timingQueue.isEmpty() && !this.motionEntry) {
+				if (this.timingQueue.isEmpty() && 
+				    (st[0] == cwi.smilText.Render.closeContainer || !this.motionEntry)) {
 					// notify event listeners: this was the last entry
 					cwi.smilText.STDocument.superClass.fireEvent.call(this, cwi.smilText.Time.EVENT_END);
 				}		
@@ -936,7 +937,7 @@ cwi.smilText.Parser.parseSmilTextElem = function(doc, elem, layout, currentTime,
 		/* smilText tags */
 		else {
 			var tag = elem.childNodes[j].nodeName.toLowerCase();
-					
+			
 			switch(tag)
 			{
 				
@@ -990,6 +991,8 @@ cwi.smilText.Parser.parseSmilTextElem = function(doc, elem, layout, currentTime,
 				  // Apply append attribute.
 				  if (doc.getStoredAttribute(layout, 'textmode') == "replace") {
 				  	  doc.addTimingEntry(cwi.smilText.Render.clearLayout, new Array(doc, layout, force), currentTime * 1000);
+				  } else {
+				  	  doc.addTimingEntry(cwi.smilText.Render.appendText, new Array(doc, " ", layout, force), currentTime * 1000);
 				  }
 				  
 				  break;   
@@ -1044,6 +1047,8 @@ cwi.smilText.Parser.parseSmilTextElem = function(doc, elem, layout, currentTime,
 				case 'br':
 				  if (doc.getStoredAttribute(layout, 'textmode') != "crawl") {
 					doc.addTimingEntry(cwi.smilText.Render.appendLineBreak, new Array(doc, layout, force), currentTime * 1000);
+				  } else {
+				  	doc.addTimingEntry(cwi.smilText.Render.appendText, new Array(doc, " ", layout, force), currentTime * 1000);	
 				  }
 				  break;
 				  
@@ -1071,7 +1076,10 @@ cwi.smilText.Parser.parseSmilTextElem = function(doc, elem, layout, currentTime,
 				  
 				  doc.updateAttribute(divID, 'textmode', doc.getStoredAttribute(layout, 'textmode'));
 				  doc.updateAttribute(divID, 'textrate', doc.getStoredAttribute(layout, 'textrate'));
+				  
+				  doc.addTimingEntry(cwi.smilText.Render.appendText, new Array(doc, " ", layout, force), currentTime * 1000);
 				  doc.addTimingEntry(cwi.smilText.Render.appendContainer, new Array(doc, divID, layout, force), currentTime * 1000);
+				  doc.addTimingEntry(cwi.smilText.Render.appendText, new Array(doc, " ", layout, force), currentTime * 1000);
 				  
 				  currentTime = cwi.smilText.Parser.parseSmilTextElem(doc, elem.childNodes[j], divID, currentTime, dur);
 				  break;
@@ -1095,7 +1103,10 @@ cwi.smilText.Parser.parseSmilTextElem = function(doc, elem, layout, currentTime,
 				  
 				  doc.updateAttribute(pID, 'textmode', doc.getStoredAttribute(layout, 'textmode'));
 				  doc.updateAttribute(pID, 'textrate', doc.getStoredAttribute(layout, 'textrate'));
+				  
+				  doc.addTimingEntry(cwi.smilText.Render.appendText, new Array(doc, " ", layout, force), currentTime * 1000);
 				  doc.addTimingEntry(cwi.smilText.Render.appendContainer, new Array(doc, pID, layout, force), currentTime * 1000);
+				  doc.addTimingEntry(cwi.smilText.Render.appendText, new Array(doc, " ", layout, force), currentTime * 1000);
 				  
 				  currentTime = cwi.smilText.Parser.parseSmilTextElem(doc, elem.childNodes[j], pID, currentTime, dur);
 				  break;
@@ -1119,7 +1130,10 @@ cwi.smilText.Parser.parseSmilTextElem = function(doc, elem, layout, currentTime,
 				  
 				  doc.updateAttribute(spanID, 'textmode', doc.getStoredAttribute(layout, 'textmode'));
 				  doc.updateAttribute(spanID, 'textrate', doc.getStoredAttribute(layout, 'textrate'));
+				  
+				  doc.addTimingEntry(cwi.smilText.Render.appendText, new Array(doc, " ", layout, force), currentTime * 1000);
 				  doc.addTimingEntry(cwi.smilText.Render.appendContainer, new Array(doc, spanID, layout, force), currentTime * 1000);
+				  doc.addTimingEntry(cwi.smilText.Render.appendText, new Array(doc, " ", layout, force), currentTime * 1000);
 				  
 				  currentTime = cwi.smilText.Parser.parseSmilTextElem(doc, elem.childNodes[j], spanID, currentTime, dur);
 				  break;

@@ -1,0 +1,290 @@
+<!--
+/**
+ * Copyright (C) 2003-2012 Stichting CWI,
+ * Science Park 123, 1098 XG Amsterdam, The Netherlands.
+ */
+
+/**
+ @version 1.0
+ @author <a href="mailto:rlaiola@cwi.nl">Rodrigo Laiola Guimaraes</a>
+ @author <a href="mailto:diogo.pedrosa@cwi.nl">Diogo Pedrosa</a>
+*/
+-->
+
+<html>
+<head>
+	<title>smilText Popcorn Plug-in</title>
+	<meta NAME="AUTHOR" CONTENT="Rodrigo Laiola Guimaraes">
+	<meta NAME="COPYRIGHT" CONTENT="Centrum Wiskunde & Informatica (CWI)">
+	<meta NAME="DESCRIPTION" 
+		CONTENT="This file is part of the smilText parser implemented in JavaScript,
+
+				Copyright (C) 2003-2011 Stichting CWI, 
+				Science Park 123, 1098 XG Amsterdam, The Netherlands.
+				
+				smilText parser in JavaScript is free software; you can redistribute it and/or modify
+				it under the terms of the GNU Lesser General Public License as published by
+				the Free Software Foundation; either version 2.1 of the License, or
+				(at your option) any later version.
+				
+				smilText parser in JavaScript is distributed in the hope that it will be useful,
+				but WITHOUT ANY WARRANTY; without even the implied warranty of
+				MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+				GNU Lesser General Public License for more details.
+				
+				You should have received a copy of the GNU Lesser General Public License
+				along with smilText parser in JavaScript; if not, write to the Free Software
+				Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+				
+				@author Rodrigo Laiola Guimaraes (rlaiola@cwi.nl)">
+	<META NAME="KEYWORDS" CONTENT="smil, smilText, timing text, subtitles, captions, popcorn">
+	
+	<script src="js/popcorn-complete.js" type="text/javascript"></script>
+	
+	<!-- smilText Plug-in -->
+    <script type="text/javascript" src="../../src/scripts/jsoner.commons.js"></script>
+	<script type="text/javascript" src="../../src/scripts/com.iskitz.ajile.1.2.1.js"></script>
+	<script type="text/javascript" src="../../src/scripts/cwi.adt.js"></script>
+	<script type="text/javascript" src="../../src/scripts/cwi.util.js"></script>
+	<script type="text/javascript" src="../../src/scripts/cwi.smilText.Time.js"></script>
+	<script type="text/javascript" src="../../src/scripts/cwi.smilText.js"></script>
+
+    <script type="text/javascript" src="js/popcorn_smilText.js"></script>
+	
+    <script>
+    // wait for DOM to load
+    document.addEventListener('DOMContentLoaded', function () {
+    	var pop = Popcorn('#video');
+    	
+    	// add a smilText plugin
+       	pop.smilText({
+          source: "CapF0",
+          master: pop // popcorn element
+        });
+        
+        // add a smilText plugin
+       	pop.smilText({
+          source: "CapF1",
+          start: 16,
+          master: pop // popcorn element
+        });
+        
+        // add a smilText plugin
+       	pop.smilText({
+          source: "CapF2",
+          start: 28,
+          master: pop // popcorn element
+        });
+        
+        // add a smilText plugin
+       	pop.smilText({
+          source: "CapF3",
+          start: 35,
+          master: pop // popcorn element
+        });
+        
+        // add a smilText plugin
+       	pop.smilText({
+          source: "CapF4",
+          start: 50,
+          master: pop // popcorn element
+        });
+        
+        // add a smilText plugin
+       	pop.smilText({
+          source: "CapF5",
+          start: 103,
+          master: pop // popcorn element
+        });
+                
+        pop.play();
+    }, false);
+    </script>
+    
+    <style type="text/css">
+	html, body, div, ul, ol, li, dl, dt, dd, h1, h2, h3, h4, h5, h6, pre, form, p, blockquote, fieldset, input {
+		margin: 0 auto;
+		padding: 0;
+		text-align: center;
+	}
+
+	img { border: 0; }
+
+	fieldset, img {
+		border: none;
+	}
+	
+	#container {
+        height: 360px;
+        margin: 25px 25px;
+        padding: 30px 30px;
+        width: 480px; 
+        background-color: #F0F0F0;
+	}
+	
+	.captions_container {
+		background: none repeat scroll 0 0 rgba(0, 0, 0, 0.2);
+		color: white;
+	    font-family: sans-serif;
+	    font-size: 1.1em;
+	    font-weight: bold;
+	    height: 4em;
+	    line-height: 2em;
+	    margin: 0;
+	    padding: 0.25em 10px;
+	    position: absolute;
+	    text-shadow: 1px 1px 3px black;
+	    width: 460px;
+	    top: 470px;
+	    overflow: hidden;
+	}
+	
+	#code {
+        height: 400px;
+        margin: 25px 25px;
+        padding: 10px 10px;
+        width: 550px;
+        left: 565px;
+        top: 160px;
+        position: absolute;
+        background-color: #F5F5F5;
+	}
+	</style>
+</head>
+<body>
+	<h1 style="margin: 25px 25px; text-align: left">smilText Popcorn Plug-in</h1>
+	<section style="width: 530px; text-align: justify; margin: 25px 25px;">
+	This demonstrator uses a mix of styles and motion conventions to illustrate the options available in the W3C SMIL 3.0's timed text format. The demo uses a smilText JavaScript implementation bundled as a <a href="http://popcornjs.org">Popcorn plug-in</a>. For more info refer to the <a href="http://www.w3.org/TR/2008/REC-SMIL3-20081201/smil-text-profile.html">SMIL 3.0 SmilText External Profile</a> and the <a href="http://code.google.com/p/smiltext-javascript/">smilText JavaScript Project</a>.
+	</section>
+	
+	<div id="container">
+		<video id="video" controls="true" preload="auto">
+			<source type="video/webm" src="NYCvideo.webm" />
+			<source type="video/ogg"  src="NYCvideo.ogg" />
+			<source type="video/mp4"  src="NYCvideo.mp4" />
+			Your browser does not support the HTML5 &lt;video&gt; tag,
+			please upgrade to a modern browser to see this demo.
+		</video>
+	
+        <smilText id="CapF0" textFontSize="24" dur="6s" class="captions_container">
+        	<tev begin="1.5s"></tev>
+        	Welcome to this tour of New York,
+        	where we focus on the shapes of the city
+        	<clear begin="6s"></clear>
+       	</smilText>
+       	
+       	<smilText id="CapF1" textFontFamily="roman" textFontSize="24" dur="10s" class="captions_container">
+	        <span textFontFamily="roman">
+            We start our tour with a ride on the famous Staten Island Ferry.
+			</span>
+			<clear begin="5s"></clear>
+            The 
+            <tev begin="5.25"></tev>
+            <span textBackgroundColor="blue" textColor="white">
+            lines 
+            </span>
+            <tev begin="5.75"></tev>
+            of 
+            <tev begin="5.8"></tev>
+            the 
+            <tev begin="6"></tev>
+            <span textColor="red">lower 
+            <tev begin="6.25"></tev>
+            car 
+            <tev begin="6.5"></tev>
+            deck </span> 
+            <tev begin="6.75"></tev>
+            provide 
+            <tev begin="7.20"></tev>
+            a 
+            <tev begin="7.25"></tev>
+            <span textColor="brown" textFontSize="x-large" textFontStyle="italic" textFontFamily="serif"  textFontWeight="bold">
+            honeycomb 
+            </span>
+            <tev begin="7.75"></tev>
+            pattern 
+            <tev begin="8.15"></tev>
+            near 
+            <tev begin="8.3"></tev>
+            the 
+            <tev begin="8.5"></tev>
+            water.
+        </smilText>
+        
+        <smilText id="CapF2" dur="7s" textMode="crawl" textRate="100" textFontSize="24" class="captions_container">
+           The <span textFontFamily="serif" textFontSize="xx-large" textColor="green">artwork </span> also flows <br/> <br/>along the passenger loading platforms.
+        </smilText>
+        
+        <smilText id="CapF3" dur="10s" textMode="scroll" textRate="100" textFontSize="24" class="captions_container">
+            <span textColor="red"> <br/> The <span textFontSize="x-large">engines </span> start</span>
+            and all of the lines seem to move in different directions.
+            
+            <clear begin="5s"></clear>
+            As the boat pulls out, the arms of the passenger terminal wave goodbye.    	</smilText>
+    	
+    	<smilText id="CapF4" dur="53" textColor="yellow" textFontSize="normal" textColor="#fffffe" textFontWeight="bold" class="captions_container">
+     		In Memoriam: September 11, 2001.
+          	<clear begin="5s"></clear>
+          	Lower Manhattan stands defiantly, daring everyone to enter the City.
+          	<clear begin="10s"></clear>
+          	<clear begin="15s"></clear>
+          	Travel by train in New York brings to mind the old saying: <span textBackgroundColor="red">getting there is half the fun...</span>
+          	<clear begin="20.5s"></clear>
+          	<clear begin="21s"></clear>
+          	This is not the roller coaster at Coney Island -- it is the curve on the Flushing line.
+          	<clear begin="27s"></clear>
+          	The next minute, the train enters a giant steel maze -- and we're the rat.
+          	<clear begin="34s"></clear>
+          	<span textFontStyle="italic" textBackgroundColor="red" textColor="#ff8800">Before you know it, we pull into the elevated station. Now we are on our own in the new world.</span>
+        	<clear begin="41s"></clear>
+        	<clear begin="46s"></clear>
+        	People here don't live in 80-story high rises; they live in (very warm) four story walk-ups.
+        </smilText>
+        
+    	<smilText id="CapF5" dur="5s" textMode="scroll" textRate="100" class="captions_container">
+           	<div textColor="#ff8000">Any yes, walking up means walking up.</div>
+        </smilText>
+	</div>
+	
+	<h3 style="left: 565px; top: 115px; text-align: justify; margin: 25px 25px; position: absolute">
+	Using the smilText Popcorn plug-in:
+	</h3>
+	
+  <div id="code">
+  <pre style="text-align: left;">
+&lt;!-- Import Popcorn and smilText JS libraries: see source code --&gt;
+<code style="color: blue">&lt;script type="text/javascript" src="js/popcorn_smilText.js"&gt;&lt;/script&gt;</code>
+&lt;script&gt;
+document.addEventListener('DOMContentLoaded', function () {
+  var pop = Popcorn('#video');
+
+  // add a smilText container starting at 16 seconds
+  <code style="color: red">pop.smilText({
+    source: "smilText-source", // id of smilText container
+    target: "smilText-target", // optional
+    start: "16s",              // optional
+    master: pop                // popcorn element
+  });</code>
+  
+  pop.play();
+}, false);
+&lt;/script&gt;
+
+&lt;body&gt;
+  ...
+  <code style="color: green">&lt;smilText id="smilText-source" textFontSize="24" dur="6s"&gt;
+    &lt;tev begin="1.5s"&gt;&lt;/tev&gt;
+    We start our tour with a ride on the famous Staten Island Ferry.
+    &lt;clear begin="6s"&gt;&lt;/clear&gt;
+  &lt;/smilText&gt;</code>
+  ...
+&lt;/body&gt;
+  </pre>
+  </div>
+  
+  <section style="text-align: justify; margin: 25px 25px;">
+  <h3 style="text-align: justify; margin: 25px 0px;">Credits</h3>
+  This demo was created by Rodrigo Laiola at CWI. The artwork is an adaptation of the New York Geo demo that is bundled with the AMBULANT Player distribution.
+  </section>
+</body>
+</html>
