@@ -77,7 +77,7 @@
   <li>A set of browser-specific tests for <a href="http://smiltext-javascript.googlecode.com/svn/trunk/samples/test%20firefox.html">Firefox</a>, <a href="http://smiltext-javascript.googlecode.com/svn/trunk/samples/test%20ie.html">IE-7</a>, <a href="http://smiltext-javascript.googlecode.com/svn/trunk/samples/test%20opera.html">Opera</a> and <a href="http://smiltext-javascript.googlecode.com/svn/trunk/samples/test%20safari.html">Safari</a>, all including links to the sources.</li>
   <li>This <a href="http://smiltext-javascript.googlecode.com/svn/trunk/samples/youtube/index.html">demonstrator</a> shows how smilText JS can caption a YouTube video (NOT supported by Safari).</li>
   <li>This <a href="http://smiltext-javascript.googlecode.com/svn/trunk/samples/test%20events.html">example</a> shows how event listeners can be associated to the presentation of a smilText document.</li>
-  <li>This <a href="http://smiltext-javascript.googlecode.com/svn/trunk/samples/test%20on%20the%20fly.html>example</a> shows how to create smilText documents on the fly.</li>
+  <li>This <a href="http://smiltext-javascript.googlecode.com/svn/trunk/samples/test%20on%20the%20fly.html">example</a> shows how to create smilText documents on the fly.</li>
   <li>This <a href="http://smiltext-javascript.googlecode.com/svn/trunk/samples/popcorn_plugin/smilText.html">demo</a> uses the smilText JavaScript implementation bundled as a Popcorn plug-in.</li>
 </ol>
 
