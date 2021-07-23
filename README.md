@@ -71,20 +71,20 @@
 <h3>External smilText samples</h3>
 <p>Ten very techie pages illustrate a host of browser-embedded smilText examples. Note that some pages have many simultaneous smilText fragments active at once. Consider them eye tests for your mind. The samples are:</p>
 <ol>
-  <li>A set of <a href="http://smiltext-javascript.googlecode.com/svn/trunk/samples/test1.html">simple external smilText file examples</a>, including links to the sources.</li>
-  <li>A set of <a href="http://smiltext-javascript.googlecode.com/svn/trunk/samples/test2.html">structured external smilText file examples</a>, including links to the sources.</li>
-  <li>A set of <a href="http://smiltext-javascript.googlecode.com/svn/trunk/samples/test3.html">motion-based embedded smilText file examples</a>, including links to the sources.</li>
-  <li>A set of browser-specific tests for <a href="http://smiltext-javascript.googlecode.com/svn/trunk/samples/test%20firefox.html">Firefox</a>, <a href="http://smiltext-javascript.googlecode.com/svn/trunk/samples/test%20ie.html">IE-7</a>, <a href="http://smiltext-javascript.googlecode.com/svn/trunk/samples/test%20opera.html">Opera</a> and <a href="http://smiltext-javascript.googlecode.com/svn/trunk/samples/test%20safari.html">Safari</a>, all including links to the sources.</li>
-  <li>This <a href="http://smiltext-javascript.googlecode.com/svn/trunk/samples/youtube/index.html">demonstrator</a> shows how smilText JS can caption a YouTube video (NOT supported by Safari).</li>
-  <li>This <a href="http://smiltext-javascript.googlecode.com/svn/trunk/samples/test%20events.html">example</a> shows how event listeners can be associated to the presentation of a smilText document.</li>
-  <li>This <a href="http://smiltext-javascript.googlecode.com/svn/trunk/samples/test%20on%20the%20fly.html">example</a> shows how to create smilText documents on the fly.</li>
-  <li>This <a href="http://smiltext-javascript.googlecode.com/svn/trunk/samples/popcorn_plugin/smilText.html">demo</a> uses the smilText JavaScript implementation bundled as a Popcorn plug-in.</li>
+  <li>A set of <a href="https://rlaiola.github.io/smiltext-javascript/samples/test1.html">simple external smilText file examples</a>, including links to the sources.</li>
+  <li>A set of <a href="https://rlaiola.github.io/smiltext-javascript/samples/test2.html">structured external smilText file examples</a>, including links to the sources.</li>
+  <li>A set of <a href="https://rlaiola.github.io/smiltext-javascript/samples/test3.html">motion-based embedded smilText file examples</a>, including links to the sources.</li>
+  <li>A set of browser-specific tests for <a href="https://rlaiola.github.io/smiltext-javascript/samples/test%20firefox.html">Firefox</a>, <a href="https://rlaiola.github.io/smiltext-javascript/samples/test%20ie.html">IE-7</a>, <a href="https://rlaiola.github.io/smiltext-javascript/samples/test%20opera.html">Opera</a> and <a href="https://rlaiola.github.io/smiltext-javascript/samples/test%20safari.html">Safari</a>, all including links to the sources.</li>
+  <li>This <a href="https://rlaiola.github.io/smiltext-javascript/samples/youtube/index.html">demonstrator</a> shows how smilText JS can caption a YouTube video (NOT supported by Safari).</li>
+  <li>This <a href="https://rlaiola.github.io/smiltext-javascript/samples/test%20events.html">example</a> shows how event listeners can be associated to the presentation of a smilText document.</li>
+  <li>This <a href="https://rlaiola.github.io/smiltext-javascript/samples/test%20on%20the%20fly.html">example</a> shows how to create smilText documents on the fly.</li>
+  <li>This <a href="https://rlaiola.github.io/smiltext-javascript/samples/popcorn_plugin/smilText.html">demo</a> uses the smilText JavaScript implementation bundled as a Popcorn plug-in.</li>
 </ol>
 
-<p>For more information on composing a timed text file using smilText, see the <a href="http://xmediasmil.net/Chapters/SampleChapter.pdf">chapter on smilText</a>, taken from the book <a href="http://xmediasmil.net/">SMIL 3.0: Interactive Multimedia for the Web, Mobile Devices and Daisy Talking Books</a>.<p>
+<p>For more information on composing a timed text file using smilText, see the chapter on smilText, taken from the book <a href="https://dl.acm.org/doi/10.5555/1481029">SMIL 3.0: Interactive Multimedia for the Web, Mobile Devices and Daisy Talking Books</a>.<p>
 
 <h3>Documentation</h3>
-<p>The <a href="http://smiltext-javascript.googlecode.com/svn/trunk/docs/1.1/index.html">smilText JavaScript API</a> lets you embed SMIL 3.0 smilText functionalities in your own Web pages with JavaScript. The API provides a number of utilities for adding and manipulating timed text content, allowing you to create interesting applications such as the Ambulant Captioner (discontinued).
+<p>The <a href="https://rlaiola.github.io/smiltext-javascript/docs/1.1/index.html">smilText JavaScript API</a> lets you embed SMIL 3.0 smilText functionalities in your own Web pages with JavaScript. The API provides a number of utilities for adding and manipulating timed text content, allowing you to create interesting applications such as the Ambulant Captioner (discontinued).
 
 <h3>Developers</h3>
 <p>If you're planning to use smilText JavaScript in a Web-based application, then you'll want to join the <a href="http://groups.google.com/group/smiltext-javascript">smilText JavaScript Developer Group</a>. This is a useful place to ask questions, keep up-to-date on releases, and make suggestions for future versions.</p>
