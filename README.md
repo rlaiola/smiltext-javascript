@@ -2,7 +2,7 @@
 <h6>The smilText JavaScript project</h6>
 <p>The purpose of the smilText JavaScript engine is to provide an implementation of SMIL 3.0 smilText functionality within an HTML browser. This release has been tested with Firefox 3, IE-7, Opera and Safari.</p>
 <p>The smilText engine has reasonably complete coverage of the features defined in the <a href="http://www.w3.org/TR/2008/REC-SMIL3-20081201/smil-text-profile.html">SMIL 3.0 SmilText External Profile</a>. The smilText JavaScript engine allows source content to reside within the HTML markup (NB: not supported by all browsers), in a local file or on a server. Access may be via file I/O, via http streaming or via an RTSP server.</p>
-<p>The initial code for the project was developed by <a href="http://www.rodrigolaiola.com">Rodrigo Laiola Guimarães</a> at <a href="http://www.cwi.nl/en">CWI</a>.
+<p>The initial code for the project was developed by <a href="http://www.rodrigolaiola.com">Rodrigo Laiola Guimarães</a> at <a href="http://www.cwi.nl">CWI</a>.
 
 <h3>Getting involved</h3>
 <p>The HTML integrating the JavaScript engine must define the engine as follows:</p>
